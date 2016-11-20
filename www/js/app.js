@@ -27,6 +27,28 @@ app.config(function($stateProvider, $urlRouterProvider) {
           templateUrl: 'templates/bookings/new.html'
         }
       }
+    })
+    .state('bookings.destination', {
+      url: '/destination',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/bookings/destination.html'
+        }
+      }
+    })
+    .state('payments-history', {
+      url: '/payments-history',
+      abstract: true,
+      templateUrl: 'templates/menu.html',
+      controller: 'PaymentsHistoryCtrl'
+    })
+    .state('payments-history.view', {
+      url: '/view',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/payments-history/view.html'
+        }
+      }
     });
   $urlRouterProvider.otherwise('/bookings/new');
 });
