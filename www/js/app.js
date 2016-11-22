@@ -14,6 +14,20 @@ app.run(function($ionicPlatform) {
 
 app.config(function($stateProvider, $urlRouterProvider) {
   $stateProvider
+    .state('login', {
+      url: '/login',
+      abstract: true,
+      templateUrl: 'templates/menu.html',
+      controller: 'LoginCtrl'
+    })
+    .state('login.start', {
+      url: '/start',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/login/start.html'
+        }
+      }
+    })
     .state('bookings', {
       url: '/bookings',
       abstract: true,
@@ -50,5 +64,5 @@ app.config(function($stateProvider, $urlRouterProvider) {
         }
       }
     });
-  $urlRouterProvider.otherwise('/bookings/new');
+  $urlRouterProvider.otherwise('/login/start');
 });

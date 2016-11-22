@@ -16,6 +16,10 @@ app.controller('BookingsCtrl', function($scope, $ionicModal, $http, $state) {
     $state.go('bookings.destination');
   };
 
+  $scope.submitBooking = function(){
+    $scope.modal.show();
+  };
+
   $ionicModal.fromTemplateUrl('templates/bookings/sync-notification.html', {
     scope: $scope
   }).then(function(modal) {
@@ -31,4 +35,15 @@ app.controller('BookingsCtrl', function($scope, $ionicModal, $http, $state) {
 
 app.controller('PaymentsHistoryCtrl', function($scope, $ionicModal, $http) {
   
+});
+
+app.controller('LoginCtrl', function($scope, $ionicModal, $http, $ionicSideMenuDelegate, $state) {
+
+  $ionicSideMenuDelegate.canDragContent(false);
+
+  $scope.submit = function () {
+    $state.go('bookings.new');
+  }
+
+  $scope.$on('$ionicView.leave', function () { $ionicSideMenuDelegate.canDragContent(true) });
 });
