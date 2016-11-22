@@ -28,6 +28,28 @@ app.config(function($stateProvider, $urlRouterProvider) {
         }
       }
     })
+    .state('profile', {
+      url: '/profile',
+      abstract: true,
+      templateUrl: 'templates/menu.html',
+      controller: 'ProfileCtrl'
+    })
+    .state('profile.create', {
+      url: '/create',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/profile/create.html'
+        }
+      }
+    })
+    .state('profile.view', {
+      url: '/view',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/profile/view.html'
+        }
+      }
+    })
     .state('bookings', {
       url: '/bookings',
       abstract: true,
@@ -61,6 +83,14 @@ app.config(function($stateProvider, $urlRouterProvider) {
       views: {
         'menuContent': {
           templateUrl: 'templates/payments-history/view.html'
+        }
+      }
+    })
+    .state('payments-history.pending', {
+      url: '/pending',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/payments-history/pending.html'
         }
       }
     });

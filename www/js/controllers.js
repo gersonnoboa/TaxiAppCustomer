@@ -1,6 +1,6 @@
 var app = angular.module('starter.controllers', []);
 
-app.controller('BookingsCtrl', function($scope, $ionicModal, $http, $state) {
+app.controller('BookingsCtrl', function($scope, $ionicModal, $ionicPopup, $http, $state) {
   $scope.longitude = 0;
   $scope.latitude = 0;
   $scope.sync_notification = '';
@@ -17,7 +17,15 @@ app.controller('BookingsCtrl', function($scope, $ionicModal, $http, $state) {
   };
 
   $scope.submitBooking = function(){
-    $scope.modal.show();
+    //$scope.modal.show();
+    var alertPopup = $ionicPopup.alert({
+      title: 'Confirmation',
+      template: 'Your request has been sent. We will notify you when a driver is available.'
+    });
+
+    alertPopup.then(function(res) {
+      $state.go('payments-history.pending')
+    });
   };
 
   $ionicModal.fromTemplateUrl('templates/bookings/sync-notification.html', {
@@ -44,6 +52,24 @@ app.controller('LoginCtrl', function($scope, $ionicModal, $http, $ionicSideMenuD
   $scope.submit = function () {
     $state.go('bookings.new');
   }
+
+  $scope.$on('$ionicView.leave', function () { $ionicSideMenuDelegate.canDragContent(true) });
+});
+
+app.controller('ProfileCtrl', function($scope, $ionicPopup, $http, $ionicSideMenuDelegate, $state) {
+
+  $ionicSideMenuDelegate.canDragContent(false);
+
+  $scope.showAlert = function() {
+    var alertPopup = $ionicPopup.alert({
+      title: 'Confirmation',
+      template: 'Profile created successfully.'
+    });
+
+    alertPopup.then(function(res) {
+      $state.go('login.start')
+    });
+  };
 
   $scope.$on('$ionicView.leave', function () { $ionicSideMenuDelegate.canDragContent(true) });
 });

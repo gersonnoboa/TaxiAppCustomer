@@ -1,0 +1,35 @@
+<ion-view title="Create Account">
+    <ion-nav-buttons side="left">
+        <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
+    </ion-nav-buttons>
+    <ion-content padding="true" class="has-header">
+        <form>
+            <label class="item item-input">
+                <span class="input-label">First Name</span>
+                <input type="text" placeholder="First Name">
+            </label>
+            <label class="item item-input">
+                <span class="input-label">Last Name</span>
+                <input type="text" placeholder="Last Name">
+            </label>
+
+            <label class="item item-input">
+                <span class="input-label">Email address</span>
+                <input type="text" placeholder="example@ut.ee">
+            </label>
+
+            <label class="item item-input">
+                <span class="input-label">Password</span>
+                <input type="text" placeholder="Min. 6 characters">
+            </label>
+
+            <label class="item item-input">
+                <span class="input-label">Repeat password</span>
+                <input type="text" placeholder="Min. 6 characters">
+            </label>
+
+            <button class="button button-stable button-block " ng-click="showAlert()">Create profile</button>
+
+        </form>
+    </ion-content>
+</ion-view>
