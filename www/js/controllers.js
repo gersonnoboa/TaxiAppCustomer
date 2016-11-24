@@ -1,4 +1,4 @@
-var app = angular.module('starter.controllers', []);
+var app = angular.module('taxi_home_customer.controllers', []);
 
 app.controller('BookingsCtrl', function($scope, $ionicModal, $http, $state) {
   $scope.longitude = 0;
@@ -12,6 +12,7 @@ app.controller('BookingsCtrl', function($scope, $ionicModal, $http, $state) {
         $scope.modal.show();
 
       });*/
+    //BookingsService.save({latitude: $scope.latitude, longitude: $scope.longitude});
 
     $state.go('bookings.destination');
   };
@@ -34,7 +35,7 @@ app.controller('BookingsCtrl', function($scope, $ionicModal, $http, $state) {
 });
 
 app.controller('PaymentsHistoryCtrl', function($scope, $ionicModal, $http) {
-  
+
 });
 
 app.controller('LoginCtrl', function($scope, $ionicModal, $http, $ionicSideMenuDelegate, $state) {

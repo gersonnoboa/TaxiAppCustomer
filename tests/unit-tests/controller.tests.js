@@ -2,22 +2,29 @@
 
 describe('BookingsCtrl', function () {
 
-  beforeEach(module('starter'));
+  beforeEach(module('taxi_home_customer'));
 
   var BookingsCtrl,
     scope,
     $httpBackend;
 
-  beforeEach(inject(function ($controller, $rootScope, _$httpBackend_, _BookingsService_, _PusherService_) {
+  beforeEach(inject(function ($controller, $rootScope, _$httpBackend_/*, _BookingsService_, _PusherService_*/) {
     scope = $rootScope.$new();
     $httpBackend = _$httpBackend_;
 
     BookingsCtrl = $controller('BookingsCtrl', {
       $scope: scope,
-      BookingsService: _BookingsService_,
-      PusherService: _PusherService_
+      //BookingsService: _BookingsService_,
+      //PusherService: _PusherService_
     });
   }));
+
+  it('should bind to the field data', function () {
+    expect(scope.longitude).toBeDefined();
+    expect(scope.latitude).toBeDefined();
+    expect(scope.sync_notification).toBeDefined();
+
+  });
 
   it('should submit a request to the backend service', function () {
     /*$httpBackend
@@ -35,6 +42,6 @@ describe('BookingsCtrl', function () {
 
     expect(scope.syncNotification).toBe('Booking is being processed');
     expect(scope.asyncNotification).toBe('Your taxi will arrive in 3 minutes');*/
-    expect(scope.latitude).toBe(1);
+    expect(scope.latitude).toBe(0);
   });
 });

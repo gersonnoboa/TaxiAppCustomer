@@ -1,4 +1,4 @@
-var app = angular.module('starter', ['ionic', 'starter.controllers']);
+var app = angular.module('taxi_home_customer', ['ionic', 'taxi_home_customer.controllers']);
 
 app.run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
