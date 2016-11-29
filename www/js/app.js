@@ -1,6 +1,5 @@
-var app = angular.module('taxi_home_customer', ['ionic', 'taxi_home_customer.controllers']);
-
-app.run(function($ionicPlatform) {
+angular.module('taxi_home_customer', ['ionic', 'taxi_home_customer.controllers', 'taxi_home_customer.services'])
+.run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
     if (window.cordova && window.cordova.plugins.Keyboard) {
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
@@ -10,9 +9,27 @@ app.run(function($ionicPlatform) {
       StatusBar.styleDefault();
     }
   });
-});
+})
+.factory('Framework', function ($q) {
+  var _navigator = $q.defer();
+  var _cordova = $q.defer();
 
-app.config(function($stateProvider, $urlRouterProvider) {
+  if (window.cordova === undefined) {
+    _navigator.resolve(window.navigator);
+    _cordova.resolve(false);
+  } else {
+    document.addEventListener('deviceready', function (evt) {
+      _navigator.resolve(navigator);
+      _cordova.resolve(true);
+    });
+  }
+
+  return {
+    navigator: function() { return _navigator.promise; },
+    cordova: function() { return _cordova.promise; }
+  };
+})
+.config(function($stateProvider, $urlRouterProvider) {
   $stateProvider
     .state('login', {
       url: '/login',

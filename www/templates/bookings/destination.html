@@ -1,32 +1,33 @@
 <ion-view title="New booking">
     <ion-content padding="true" class="has-header">
-        <form>
-            <label class="item item-input">
-                <span class="input-label">Your current location is: </span>
-                <input type="text" placeholder="" disabled="disabled" value="Liivi 2">
-            </label>
 
-            <label class="item item-input">
-                <span class="input-label">Enter destination address: </span>
-                <input type="text" placeholder="">
-            </label>
+        <div id="map" style="width:100%;height:600px;"></div>
 
-            <label class="item item-input">
-                <span class="input-label">Latitude: </span>
-                <input type="number" placeholder="" disabled="disabled" value="-2.76787667">
-            </label>
+        <div style="position: absolute; top: 30px; left: 30px; right: 30px; left: 30px">
+            <form>
+                <label class="item item-input">
+                    <span class="input-label">Destination address: </span>
+                    <input type="text" placeholder="" ng-model="formData.destinationAddress">
+                </label>
 
-            <label class="item item-input">
-                <span class="input-label">Longitude: </span>
-                <input type="number" placeholder="" disabled="disabled" value="-79.5534533">
-            </label>
+                <label class="item item-input">
+                    <span class="input-label">Latitude: </span>
+                    <input type="number" placeholder="" disabled="disabled" ng-model="formData.destinationLatitude">
+                </label>
 
-            <label class="item item-input">
-                <span class="input-label">Approx. time of arrival: </span>
-                <input type="number" placeholder="" disabled="disabled">
-            </label>
+                <label class="item item-input">
+                    <span class="input-label">Longitude: </span>
+                    <input type="number" placeholder="" disabled="disabled" ng-model="formData.destinationLongitude">
+                </label>
 
-            <button class="button button-stable button-block " ng-click="submitBooking()">Submit booking request!</button>
-        </form>
+                <label class="item item-input">
+                    <span class="input-label">Approx. time of arrival: </span>
+                    <input type="number" placeholder="" disabled="disabled">
+                </label>
+
+                <button class="button button-stable button-block " ng-click="submitBooking()">Submit Booking</button>
+            </form>
+        </div>
+        
     </ion-content>
 </ion-view>

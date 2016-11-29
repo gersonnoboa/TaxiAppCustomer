@@ -6,11 +6,11 @@
         <form>
             <label class="item item-input">
                 <span class="input-label">Username</span>
-                <input type="text" placeholder="Username">
+                <input type="text" placeholder="Username" ng-model="formData.username" value="barcelona">
             </label>
             <label class="item item-input">
                 <span class="input-label">Password</span>
-                <input type="number" placeholder="Password">
+                <input type="password" placeholder="Password" ng-model="formData.password">
             </label>
             <button class="button button-stable button-block " ng-click="submit()">Start</button>
 
