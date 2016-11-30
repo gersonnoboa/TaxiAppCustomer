@@ -122,10 +122,47 @@ app.controller('BookingsCtrl', function($scope, $ionicModal, $ionicPopup, $http,
                 $scope.map.fitBounds($scope.bounds);    
             }
 
+            if ($scope.pickupMarker != null && $scope.destinationMarker != null){
+                $scope.drawRouteFromMarkers($scope.pickupMarker, $scope.destinationMarker);    
+            }
+
             return coordinates;    
         }
         
     };
+
+    $scope.drawRouteFromMarkers = function(marker1, marker2){
+        var directionsService = new google.maps.DirectionsService();
+        var directionsDisplay = new google.maps.DirectionsRenderer();
+
+        directionsDisplay.setMap($scope.map);
+
+        var start = marker1.position;
+        var end = marker2.position;
+
+        var request = {
+            origin: start,
+            destination: end,
+            travelMode: google.maps.TravelMode.DRIVING
+        };
+
+        directionsService.route(request, function (response, status) {
+            if (status == google.maps.DirectionsStatus.OK) {
+                directionsDisplay.setDirections(response);
+                directionsDisplay.setMap($scope.map);
+
+                $scope.pickupMarker.setMap(null);
+                $scope.destinationMarker.setMap(null);
+
+                return directionsDisplay;
+            } else {
+                console.log("Directions Request from " + start.toUrlValue(6) + " to " + end.toUrlValue(6) + " failed: " + status);
+                return null;
+            }
+        });
+
+        return directionsDisplay;
+    }
 
     $scope.submit = function() {
         /*$http.post('http://localhost:8100/#/bookings/new', {longitude: $scope.longitude, latitude: $scope.latitude})

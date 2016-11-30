@@ -93,6 +93,26 @@ describe('BookingsCtrl', function () {
 
 		expect(scope.submitDestinationAddress(scope.formData.destinationAddress)).toEqual(coordinates);
 	});
+
+	xit('should draw coordinates', function(){
+
+		var dummyElement = document.createElement('div')
+		scope.map = new google.maps.Map(dummyElement);
+
+		var marker1 = new google.maps.Marker({ 
+            map: scope.map,
+            position: {lat: 58.37, lng: 26.71},
+        });
+
+		var marker2 = new google.maps.Marker({ 
+            map: scope.map, 
+            position: {lat: 58.36, lng: 26.72},
+        });
+
+		var renderer = scope.drawRouteFromMarkers(marker1, marker2);
+
+		expect(typeof(renderer)).toBe(google.maps.DirectionsRenderer);
+	});
 });
 
 describe('PaymentsHistoryCtrl', function(){
