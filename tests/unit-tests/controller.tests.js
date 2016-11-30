@@ -19,7 +19,6 @@ describe('BookingsCtrl', function () {
 
 	it('should bind to the field data', function () {
 		expect(scope.sync_notification).toBeDefined();
-
 	});
 
 	it('should submit a request to the backend service', function () {
@@ -142,14 +141,21 @@ describe('LoginCtrl', function(){
 describe('ProfileCtrl', function(){
 	beforeEach(module('taxi_home_customer'));
 
-	var LoginCtrl, scope, $httpBackend;
+	var ProfileCtrl, scope, $httpBackend;
 
 	beforeEach(inject(function ($controller, $rootScope, _$httpBackend_, $ionicSideMenuDelegate) {
 		scope = $rootScope.$new();
 		$httpBackend = _$httpBackend_;
 
-		LoginCtrl = $controller('LoginCtrl', {
+		ProfileCtrl = $controller('ProfileCtrl', {
 			$scope: scope
 		});
 	}));
+
+	it('Should not create account if fields are empty', function(){
+		var firstName = "", lastName = "", emailAddress = "", password = "", repeatPassword = "";
+
+		expect(scope.createAccount).toBeFalsy();
+
+	});
 });
