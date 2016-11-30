@@ -56,7 +56,6 @@ app.controller('BookingsCtrl', function($scope, $ionicModal, $ionicPopup, $http,
     };
 
     $scope.submitPickupAddress = function() {
-        console.log("other enters");
         var address = $scope.formData.pickupAddress;
 
         var coordinates = $scope.getCoordinatesFromAddress(address);
@@ -67,7 +66,6 @@ app.controller('BookingsCtrl', function($scope, $ionicModal, $ionicPopup, $http,
     };  
 
     $scope.submitDestinationAddress = function() {
-        console.log("enters");
 
         var address = $scope.formData.destinationAddress;
 
@@ -84,7 +82,10 @@ app.controller('BookingsCtrl', function($scope, $ionicModal, $ionicPopup, $http,
         });
 
         $scope.bounds.extend($scope.destinationMarker.position);
-        $scope.map.fitBounds($scope.bounds);
+
+        if ($scope.map){
+            $scope.map.fitBounds($scope.bounds);    
+        }
 
         return coordinates;
     };
@@ -195,6 +196,14 @@ app.controller('LoginCtrl', function($scope, $http, $ionicSideMenuDelegate, $sta
 
 app.controller('ProfileCtrl', function($scope, $ionicPopup, $http, $ionicSideMenuDelegate, $state){
 
+    $scope.formData = {
+        firstName: "",
+        lastName: "",
+        email: "",
+        password: "",
+        repeatPassword: ""
+    }
+
     $ionicSideMenuDelegate.canDragContent(false);
 
     $scope.showAlert = function() {
@@ -210,7 +219,36 @@ app.controller('ProfileCtrl', function($scope, $ionicPopup, $http, $ionicSideMen
 
     $scope.$on('$ionicView.leave', function () { $ionicSideMenuDelegate.canDragContent(true) });
 
-    $scope.submit = function(){
+    $scope.submitAccountCreation = function(){
+        var fd = $scope.formData;
 
+        $scope.createAccount(fd.firstName, fd.lastName, fd.email, fd.password, fd.repeatPassword);
+    }
+
+    $scope.createAccount = function(fn, ln, email, pw, rpw){
+        
+
+        if (fn == "" || ln == "" || email == "" || pw == "" || rpw == ""){
+
+            $ionicPopup.alert({
+                title: 'Error',
+                template: 'All fields are mandatory.'
+            });
+
+            return false;
+        }
+        else if (pw != rpw){
+            $ionicPopup.alert({
+                title: 'Error',
+                template: 'Passwords must be equal.'
+            });
+
+            return false;
+        }
+        else{
+            return true;
+
+        }
+        
     }
 });

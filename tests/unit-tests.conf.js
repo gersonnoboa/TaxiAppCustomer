@@ -15,7 +15,7 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-        'https://js.stripe.com/v2',
+        'http://maps.googleapis.com/maps/api/js',
         '../www/lib/ionic/js/ionic.bundle.js',
         '../www/lib/angular-mocks/angular-mocks.js',
         '../www/js/*.js',

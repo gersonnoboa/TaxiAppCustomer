@@ -141,7 +141,7 @@ describe('LoginCtrl', function(){
 describe('ProfileCtrl', function(){
 	beforeEach(module('taxi_home_customer'));
 
-	var ProfileCtrl, scope, $httpBackend;
+	var ProfileCtrl, scope, $httpBackend, firstName = "", lastName = "", emailAddress = "", password = "", repeatPassword = "";
 
 	beforeEach(inject(function ($controller, $rootScope, _$httpBackend_, $ionicSideMenuDelegate) {
 		scope = $rootScope.$new();
@@ -153,9 +153,23 @@ describe('ProfileCtrl', function(){
 	}));
 
 	it('Should not create account if fields are empty', function(){
-		var firstName = "", lastName = "", emailAddress = "", password = "", repeatPassword = "";
 
-		expect(scope.createAccount).toBeFalsy();
-
+		expect(scope.createAccount(firstName, lastName, emailAddress, password, repeatPassword)).toBeFalsy();
 	});
+
+	it("Should not create account if passwords don't coincide", function(){
+		password = "password";
+		repeatPassword = "password2";
+		expect(scope.createAccount("Gerson", "Noboa", "gerson.noboa@ut.ee", password, repeatPassword)).toBeFalsy();
+	});
+
+	it("Should create account if everything is correct", function(){
+		firstName = "Gerson";
+		lastName = "Noboa";
+		emailAddress = "gerson.noboa@ut.ee";
+		password = "12345";
+		repeatPassword = "12345";
+
+		expect(scope.createAccount(firstName, lastName, emailAddress, password, repeatPassword)).toBeTruthy();
+	})
 });

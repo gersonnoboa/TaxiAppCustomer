@@ -6,29 +6,29 @@
         <form>
             <label class="item item-input">
                 <span class="input-label">First Name</span>
-                <input type="text" placeholder="First Name">
+                <input type="text" placeholder="First Name" ng-model="formData.firstName">
             </label>
             <label class="item item-input">
                 <span class="input-label">Last Name</span>
-                <input type="text" placeholder="Last Name">
+                <input type="text" placeholder="Last Name" ng-model="formData.lastName">
             </label>
 
             <label class="item item-input">
                 <span class="input-label">Email address</span>
-                <input type="text" placeholder="example@ut.ee">
+                <input type="text" placeholder="example@ut.ee" ng-model="formData.email">
             </label>
 
             <label class="item item-input">
                 <span class="input-label">Password</span>
-                <input type="text" placeholder="Min. 6 characters">
+                <input type="text" placeholder="Min. 6 characters" ng-model="formData.password">
             </label>
 
             <label class="item item-input">
                 <span class="input-label">Repeat password</span>
-                <input type="text" placeholder="Min. 6 characters">
+                <input type="text" placeholder="Min. 6 characters" ng-model="formData.repeatPassword">
             </label>
 
-            <button class="button button-stable button-block " ng-click="showAlert()">Create profile</button>
+            <button class="button button-stable button-block " ng-click="submitAccountCreation()">Create account</button>
 
         </form>
     </ion-content>
