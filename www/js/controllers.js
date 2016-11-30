@@ -8,10 +8,10 @@ app.controller('BookingsCtrl', function($scope, $ionicModal, $ionicPopup, $http,
     $scope.bounds = new google.maps.LatLngBounds();
 
     $scope.formData = {
-        pickupLatitude: 0.0,
-        pickupLongitude: 0.0,
-        destinationLatitude: 0.0,
-        destinationLongitude: 0.0
+        pickupLatitude: undefined,
+        pickupLongitude: undefined,
+        destinationLatitude: undefined,
+        destinationLongitude: undefined
     };
 
     Framework.navigator().then(function (navigator) {
@@ -48,46 +48,83 @@ app.controller('BookingsCtrl', function($scope, $ionicModal, $ionicPopup, $http,
     };
 
     $scope.getCoordinatesFromAddress = function(address) {
-        var coordinates = {};
-        coordinates.latitude = 58.37;
-        coordinates.longitude = 26.71;
 
-        return coordinates;
+        if (address == ""){
+            return null;
+        }
+        else{
+            var coordinates = {};
+            coordinates.latitude = 58.37;
+            coordinates.longitude = 26.71;
+
+            return coordinates;
+        }
+            
     };
 
     $scope.submitPickupAddress = function() {
         var address = $scope.formData.pickupAddress;
 
         var coordinates = $scope.getCoordinatesFromAddress(address);
-        $scope.formData.pickupLatitude = coordinates.latitude;
-        $scope.formData.pickupLongitude = coordinates.longitude;
 
-        return coordinates;
+        if (coordinates == null){
+            
+            $ionicPopup.alert({
+                title: 'Error',
+                template: 'Field cannot be empty.'
+            });
+
+            return null;
+        }
+        else{
+            $scope.formData.pickupLatitude = coordinates.latitude;
+            $scope.formData.pickupLongitude = coordinates.longitude;
+
+            return coordinates;
+        }
+            
     };  
 
     $scope.submitDestinationAddress = function() {
 
         var address = $scope.formData.destinationAddress;
 
-        var coordinates = $scope.getCoordinatesFromAddress(address);
-        $scope.formData.destinationLatitude = coordinates.latitude;
-        $scope.formData.destinationLongitude = coordinates.longitude;
-
-        if ($scope.destinationMarker != null) $scope.destinationMarker.setMap(null);
-
-        $scope.destinationMarker = new google.maps.Marker({ 
-            map: $scope.map, 
-            position: {lat: coordinates.latitude, lng: coordinates.longitude},
-            icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
-        });
-
-        $scope.bounds.extend($scope.destinationMarker.position);
-
-        if ($scope.map){
-            $scope.map.fitBounds($scope.bounds);    
+        if (address == undefined){
+            address = "";
         }
 
-        return coordinates;
+        var coordinates = $scope.getCoordinatesFromAddress(address);
+
+        if (coordinates == null){
+
+            $ionicPopup.alert({
+                title: 'Error',
+                template: 'Field cannot be empty.'
+            });
+
+            return null;
+        }
+        else{
+            $scope.formData.destinationLatitude = coordinates.latitude;
+            $scope.formData.destinationLongitude = coordinates.longitude;
+
+            if ($scope.destinationMarker != null) $scope.destinationMarker.setMap(null);
+
+            $scope.destinationMarker = new google.maps.Marker({ 
+                map: $scope.map, 
+                position: {lat: coordinates.latitude, lng: coordinates.longitude},
+                icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
+            });
+
+            $scope.bounds.extend($scope.destinationMarker.position);
+
+            if ($scope.map){
+                $scope.map.fitBounds($scope.bounds);    
+            }
+
+            return coordinates;    
+        }
+        
     };
 
     $scope.submit = function() {
@@ -119,17 +156,22 @@ app.controller('BookingsCtrl', function($scope, $ionicModal, $ionicPopup, $http,
             });
         }
         else{
-            var alertPopup = $ionicPopup.alert({
+            $ionicPopup.alert({
                 title: 'Error',
                 template: 'An error has ocurred. Please try again later.'
             });     
-            alertPopup.show();
         }
 
     };
 
     $scope.submitBookingInfo = function(pickupLat, pickupLng, destLat, destLng) {
-        return true;
+        if (pickupLng == undefined || pickupLng == undefined || destLat == undefined || destLng == undefined){
+            return false;
+        }
+        else{
+            return true;
+        }
+        
     };
 
 });

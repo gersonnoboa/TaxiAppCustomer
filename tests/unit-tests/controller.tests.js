@@ -64,6 +64,16 @@ describe('BookingsCtrl', function () {
 		expect(scope.submitBookingInfo(pickupLat, pickupLng, destLat, destLng)).toBeTruthy();
 	});
 
+	it('Should fail if a location has not been set', function(){
+		expect(scope.submitBookingInfo(undefined, undefined, undefined, undefined)).toBeFalsy();
+	})
+
+	it('Should not allow verification if address is empty', function(){
+		var address = "";
+
+		expect(scope.getCoordinatesFromAddress(address)).toBe(null);
+	});
+
 	it('should detect the input address correctly and convert it to coordinates', function(){
 		var address = 'Juhan Liivi 2, Tartu, Estonia';
 		
@@ -75,13 +85,13 @@ describe('BookingsCtrl', function () {
 	});
 
 	it('should detect the destination address correctly and convert it to coordinates', function(){
-		var address = 'Juhan Liivi 2, Tartu, Estonia';
+		scope.formData.destinationAddress = 'Juhan Liivi 2, Tartu, Estonia';
 		
 		var coordinates = {};
 		coordinates.latitude = 58.37;
 		coordinates.longitude = 26.71;
 
-		expect(scope.submitDestinationAddress(address)).toEqual(coordinates);
+		expect(scope.submitDestinationAddress(scope.formData.destinationAddress)).toEqual(coordinates);
 	});
 });
 
