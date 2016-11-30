@@ -8,17 +8,16 @@
                 <label class="item item-input">
                     <span class="input-label">Destination address: </span>
                     <input type="text" placeholder="" ng-model="formData.destinationAddress">
+
                 </label>
 
                 <label class="item item-input">
-                    <span class="input-label">Latitude: </span>
+                    <span class="input-label">Coordinates: </span>
                     <input type="number" placeholder="" disabled="disabled" ng-model="formData.destinationLatitude">
-                </label>
-
-                <label class="item item-input">
-                    <span class="input-label">Longitude: </span>
                     <input type="number" placeholder="" disabled="disabled" ng-model="formData.destinationLongitude">
                 </label>
+
+                <button class="button button-stable button-block" ng-click="submitDestinationAddress()">Verify Address</button>
 
                 <label class="item item-input">
                     <span class="input-label">Approx. time of arrival: </span>
@@ -26,6 +25,7 @@
                 </label>
 
                 <button class="button button-stable button-block " ng-click="submitBooking()">Submit Booking</button>
+
             </form>
         </div>
         
