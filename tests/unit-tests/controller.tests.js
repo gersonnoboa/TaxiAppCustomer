@@ -129,7 +129,7 @@ describe('PaymentsHistoryCtrl', function(){
 		});
 	}));
 
-	it('should return Payments History', function(){
+	it('Should return Payments History', function(){
 		var user = 'gerson';
 		expect(scope.getPayments(user)).toBeDefined();
 	});
@@ -193,13 +193,38 @@ describe('ProfileCtrl', function(){
 		expect(scope.createAccount("Gerson", "Noboa", "gerson.noboa@ut.ee", password, repeatPassword)).toBeFalsy();
 	});
 
+	it("Should not create account if password is shorter than 6 characters", function(){
+		password = "12345";
+		repeatPassword = "12345";
+		expect(scope.createAccount("Gerson", "Noboa", "gerson.noboa@ut.ee", password, repeatPassword)).toBeFalsy();
+	});
+
 	it("Should create account if everything is correct", function(){
 		firstName = "Gerson";
 		lastName = "Noboa";
 		emailAddress = "gerson.noboa@ut.ee";
-		password = "12345";
-		repeatPassword = "12345";
+		password = "123456";
+		repeatPassword = "123456";
 
 		expect(scope.createAccount(firstName, lastName, emailAddress, password, repeatPassword)).toBeTruthy();
 	})
+});
+
+describe('MenuCtrl', function(){
+	beforeEach(module('taxi_home_customer'));
+
+	var MenuCtrl, scope, $httpBackend;
+
+	beforeEach(inject(function ($controller, $rootScope, _$httpBackend_, $ionicSideMenuDelegate) {
+		scope = $rootScope.$new();
+		$httpBackend = _$httpBackend_;
+
+		MenuCtrl = $controller('MenuCtrl', {
+			$scope: scope
+		});
+	}));
+
+	it("Should show confirmation on user logout", function(){
+		expect(typeof(scope.logout())).toBe(typeof({}));
+	});
 });

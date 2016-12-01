@@ -1,4 +1,4 @@
-<ion-side-menus enable-menu-with-back-views="true">
+<ion-side-menus enable-menu-with-back-views="true" ng-controller="MenuCtrl">
   <ion-side-menu-content>
     <ion-nav-bar class="bar-stable">
       <ion-nav-back-button>
@@ -34,7 +34,7 @@
           Payments History
         </ion-item>
 
-        <ion-item menu-close href="#/login/start"> 
+        <ion-item ng-click="logout();">
           Logout
         </ion-item>
 

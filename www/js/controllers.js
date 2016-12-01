@@ -230,22 +230,15 @@ app.controller('LoginCtrl', function($scope, $http, $ionicSideMenuDelegate, $sta
     $ionicSideMenuDelegate.canDragContent(false);
 
     $scope.submit = function () {
-
         $scope.performLogin($scope.formData.username, $scope.formData.password);
     }
 
     $scope.performLogin = function(username, password){
         if (username == "" || password == ""){
-            $scope.showAlert = function() {
-                var alertPopup = $ionicPopup.alert({
-                    title: 'Error',
-                    template: 'Please input data.'
-                });
-
-                alertPopup.then(function(res) {
-                    $state.go('login.start')
-                });
-            };
+            $ionicPopup.alert({
+                title: 'Error',
+                template: 'All fields are mandatory.'
+            });
 
             return false;
         }
@@ -267,6 +260,7 @@ app.controller('LoginCtrl', function($scope, $http, $ionicSideMenuDelegate, $sta
                 };
                 return false;
             }
+
         }
     }
 
@@ -324,10 +318,33 @@ app.controller('ProfileCtrl', function($scope, $ionicPopup, $http, $ionicSideMen
 
             return false;
         }
+        else if (pw.length < 6){
+            $ionicPopup.alert({
+                title: 'Error',
+                template: 'Passwords must have 6 characters or more.'
+            });
+
+            return false;   
+        }
         else{
             return true;
 
         }
         
     }
+});
+
+app.controller('MenuCtrl', function($scope, $ionicPopup, $http, $ionicSideMenuDelegate, $state){
+    $scope.logout = function(){
+        var popup = $ionicPopup.confirm({
+            title: 'Confirmation',
+            template: 'Are you sure you want to log out?'
+        }).then(function(res) {
+            if(res) {
+                $state.go("login.start");
+            }
+        });
+        
+        return popup;
+    };
 });
