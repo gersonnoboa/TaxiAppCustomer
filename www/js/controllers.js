@@ -1,6 +1,6 @@
 var app = angular.module('taxi_home_customer.controllers', []);
 
-app.controller('BookingsCtrl', function($scope, $ionicModal, $ionicPopup, $http, $state, Framework) {
+app.controller('BookingsCtrl', function($scope, $ionicModal, $ionicPopup, $http, $state, Framework, $cookies) {
   
     $scope.sync_notification = '';
     $scope.pickupMarker = null;
@@ -99,6 +99,7 @@ app.controller('BookingsCtrl', function($scope, $ionicModal, $ionicPopup, $http,
                 $scope.formData.destinationAddress = response.data.data.attributes["dropoff-address"];
                 $scope.formData.destinationLatitude = response.data.data.attributes["dropoff-lat"];
                 $scope.formData.destinationLongitude = response.data.data.attributes["dropoff-long"];
+                $scope.formData.locID = response.data.data["id"];
 
                 if ($scope.destinationMarker != null) $scope.destinationMarker.setMap(null);
 
@@ -165,40 +166,57 @@ app.controller('BookingsCtrl', function($scope, $ionicModal, $ionicPopup, $http,
         return directionsDisplay;
     }
 
-    $scope.submit = function() {
-        /*$http.post('http://localhost:8100/#/bookings/new', {longitude: $scope.longitude, latitude: $scope.latitude})
-        .then(function (response) {
-          $scope.sync_notification = response.data.message;
-          $scope.modal.show();
-
-        });*/
-        //BookingsService.save({latitude: $scope.latitude, longitude: $scope.longitude});
-
-        //$state.go('bookings.destination');
-    };
-
     $scope.submitBooking = function(){
       //$scope.modal.show();
 
         var fd = $scope.formData;
         var result = $scope.submitBookingInfo(fd.pickupLatitude, fd.pickupLongitude, fd.destinationLatitude, fd.destinationLongitude);
 
+        result = true;
+
         if (result == true) {
 
-            /*var alertPopup = $ionicPopup.alert({
-                title: 'Confirmation',
-                template: 'Your request has been sent. We will notify you when a driver is available.'
-            });
+            var token = $cookies.userToken;
+            var locID = $scope.formData.locID;
 
-            alertPopup.then(function(res) {
-                $state.go('payments-history.pending')
-            });*/
+            console.log(token);
+            console.log(locID);
 
-            $http.post('http://strs-taxi.herokuapp.com/api/users/login', {"user":{"password": password, "email": username}}).then(function (response) {
-                console.log(response);
-                $cookies.userToken = response.data.data.attributes.token;
-                console.log($cookies.userToken);
-                $state.go('bookings.new');
+            var json = {
+                "user": {
+                    "token": "iVDYzeyCBGR7Fc5gaqL13NE3"
+                }, 
+                "location": {
+                    "id": "3"
+                }
+            };
+
+            /*var json = {
+                "user": {
+                    "token": token
+                }, 
+                "location": {
+                    "id": locID
+                }
+            };*/
+
+            $http.post('http://strs-taxi.herokuapp.com/api/bookings', json).then(function (response) {
+                var d = $scope.formData;
+
+                $cookies.pickupAddress = d.pickupAddress;
+                $cookies.destinationAddress = d.destinationAddress;
+                $cookies.cost = d.cost;
+                $cookies.timeOfArrival = d.timeOfArrival;
+
+                var alertPopup = $ionicPopup.alert({
+                    title: 'Confirmation',
+                    template: 'Your request has been sent. We will notify you when a driver is available.'
+                });
+
+                alertPopup.then(function(res) {
+                    $state.go('payments-history.pending')
+                });
+                
             }, 
             function (error){
                 $ionicPopup.alert({
@@ -229,11 +247,20 @@ app.controller('BookingsCtrl', function($scope, $ionicModal, $ionicPopup, $http,
 
 });
 
-app.controller('PaymentsHistoryCtrl', function($scope, $ionicModal, $http) {
+app.controller('PaymentsHistoryCtrl', function($scope, $ionicModal, $http, $cookies) {
+
+    $scope.pendingData = {
+        pickupAddress: $cookies.pickupAddress,
+        destinationAddress: $cookies.destinationAddress,
+        cost: $cookies.cost,
+        timeOfArrival: $cookies.timeOfArrival
+    };
 
     $scope.getPayments = function(username){
         return {};
     }
+
+
 });
 
 app.controller('LoginCtrl', function($scope, $http, $ionicSideMenuDelegate, $state, $ionicPopup,$cookies){
@@ -246,8 +273,8 @@ app.controller('LoginCtrl', function($scope, $http, $ionicSideMenuDelegate, $sta
         $cookies.ccDataYear = "2018";
     }
     $scope.formData = {
-        username: 'meya@email.com',
-        password: '1234567'
+        username: 'gerson.noboa@ut.ee',
+        password: '250991'
     };
 
     $ionicSideMenuDelegate.canDragContent(false);
