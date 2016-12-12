@@ -6,7 +6,7 @@
         <form>
             <label class="item item-input">
                 <span class="input-label">Credit Card Type</span>
-                <select ng-model="formData.creditCardType">
+                <select ng-model="ccData.type">
                     <option>VISA</option>
                     <option>MasterCard</option>
                     <option>Discover</option>
@@ -16,13 +16,18 @@
             </label>
             <label class="item item-input">
                 <span class="input-label">Credit Card Number</span>
-                <input type="number" placeholder="Number" ng-model="formData.creditCardNumber">
+                <input type="text" pattern="\d*" maxlength="16" ng-model="ccData.ccNumber">
             </label>
 
             <label class="item item-input">
-                <span class="input-label">Month of Expiration</span>
-                <select>
-                    <option>1</option>
+                <span class="input-label">CVV</span>
+                <input type="text" pattern="\d*" maxlength="4" ng-model="ccData.cvv">
+            </label>
+
+            <label class="item item-input">
+                <span class="input-label">Expiration</span>
+                <select ng-model="ccData.month">
+                    <option selected="selected">1</option>
                     <option>2</option>
                     <option>3</option>
                     <option>4</option>
@@ -35,19 +40,24 @@
                     <option>11</option>
                     <option>12</option>
                 </select>
+
+                <select ng-model="ccData.year">
+                    <option>2016</option>
+                    <option selected="selected">2017</option>
+                    <option>2018</option>
+                    <option>2019</option>
+                    <option>2020</option>
+                    <option>2021</option>
+                    <option>2022</option>
+                    <option>2023</option>
+                    <option>2024</option>
+                    <option>2025</option>
+                    <option>2026</option>
+                    <option>2027</option>
+                </select>
             </label>
 
-            <label class="item item-input">
-                <span class="input-label">Password</span>
-                <input type="password" placeholder="Min. 6 characters" ng-model="formData.password">
-            </label>
-
-            <label class="item item-input">
-                <span class="input-label">Repeat password</span>
-                <input type="password" placeholder="Min. 6 characters" ng-model="formData.repeatPassword">
-            </label>
-
-            <button class="button button-stable button-block " ng-click="submitAccountCreation()">Create account</button>
+            <button class="button button-stable button-block " ng-click="saveCreditCardInfo()">Save Credit Card</button>
 
         </form>
     </ion-content>

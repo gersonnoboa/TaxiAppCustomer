@@ -89,14 +89,6 @@ angular.module('taxi_home_customer', ['ionic', 'taxi_home_customer.controllers',
 				}
 			}
 		})
-		.state('bookings.destination', {
-			url: '/destination',
-			views: {
-				'menuContent': {
-					templateUrl: 'templates/bookings/destination.html'
-				}
-			}
-		})
 		.state('payments-history', {
 			url: '/payments-history',
 			abstract: true,
