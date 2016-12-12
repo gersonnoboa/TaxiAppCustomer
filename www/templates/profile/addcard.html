@@ -1,0 +1,54 @@
+<ion-view title="Add Credit Card">
+    <ion-nav-buttons side="left">
+        <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
+    </ion-nav-buttons>
+    <ion-content padding="true" class="has-header">
+        <form>
+            <label class="item item-input">
+                <span class="input-label">Credit Card Type</span>
+                <select ng-model="formData.creditCardType">
+                    <option>VISA</option>
+                    <option>MasterCard</option>
+                    <option>Discover</option>
+                    <option>Diners Club</option>
+                    <option>American Express</option>
+                </select>
+            </label>
+            <label class="item item-input">
+                <span class="input-label">Credit Card Number</span>
+                <input type="number" placeholder="Number" ng-model="formData.creditCardNumber">
+            </label>
+
+            <label class="item item-input">
+                <span class="input-label">Month of Expiration</span>
+                <select>
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                    <option>6</option>
+                    <option>7</option>
+                    <option>8</option>
+                    <option>9</option>
+                    <option>10</option>
+                    <option>11</option>
+                    <option>12</option>
+                </select>
+            </label>
+
+            <label class="item item-input">
+                <span class="input-label">Password</span>
+                <input type="password" placeholder="Min. 6 characters" ng-model="formData.password">
+            </label>
+
+            <label class="item item-input">
+                <span class="input-label">Repeat password</span>
+                <input type="password" placeholder="Min. 6 characters" ng-model="formData.repeatPassword">
+            </label>
+
+            <button class="button button-stable button-block " ng-click="submitAccountCreation()">Create account</button>
+
+        </form>
+    </ion-content>
+</ion-view>

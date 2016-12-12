@@ -1,4 +1,4 @@
-angular.module('taxi_home_customer', ['ionic', 'taxi_home_customer.controllers', 'taxi_home_customer.services'])
+angular.module('taxi_home_customer', ['ionic', 'taxi_home_customer.controllers', 'taxi_home_customer.services', 'ngCookies'])
 .run(function($ionicPlatform) {
 	$ionicPlatform.ready(function() {
 		if (window.cordova && window.cordova.plugins.Keyboard) {
@@ -56,6 +56,14 @@ angular.module('taxi_home_customer', ['ionic', 'taxi_home_customer.controllers',
 			views: {
 				'menuContent': {
 					templateUrl: 'templates/profile/create.html'
+				}
+			}
+		})
+		.state('profile.card', {
+			url: '/card',
+			views: {
+				'menuContent': {
+					templateUrl: 'templates/profile/addcard.html'
 				}
 			}
 		})

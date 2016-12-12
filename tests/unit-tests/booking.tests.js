@@ -1,5 +1,3 @@
-'use strict';
-
 describe('BookingsCtrl', function () {
 
 	beforeEach(module('taxi_home_customer'));
@@ -17,6 +15,10 @@ describe('BookingsCtrl', function () {
 		});
 	}));
 
+	it('should have defined formData', function(){
+		expect(scope.formData).toBeDefined();
+	});
+
 	it('should bind to the field data', function () {
 		expect(scope.sync_notification).toBeDefined();
 	});
@@ -31,6 +33,7 @@ describe('BookingsCtrl', function () {
 		scope.longitude = 26.71;
 		scope.submit();
 		$httpBackend.flush();
+
 
 		var channel = Pusher.singleton.channel('bookings');
 		channel.emit('async_notification', {message: 'Your taxi will arrive in 3 minutes'})
@@ -112,119 +115,5 @@ describe('BookingsCtrl', function () {
 		var renderer = scope.drawRouteFromMarkers(marker1, marker2);
 
 		expect(typeof(renderer)).toBe(google.maps.DirectionsRenderer);
-	});
-});
-
-describe('PaymentsHistoryCtrl', function(){
-	beforeEach(module('taxi_home_customer'));
-
-	var PaymentsHistoryCtrl, scope, $httpBackend;
-
-	beforeEach(inject(function ($controller, $rootScope, _$httpBackend_, $ionicSideMenuDelegate) {
-		scope = $rootScope.$new();
-		$httpBackend = _$httpBackend_;
-
-		PaymentsHistoryCtrl = $controller('PaymentsHistoryCtrl', {
-			$scope: scope
-		});
-	}));
-
-	it('Should return Payments History', function(){
-		var user = 'gerson';
-		expect(scope.getPayments(user)).toBeDefined();
-	});
-});
-
-describe('LoginCtrl', function(){
-	beforeEach(module('taxi_home_customer'));
-
-	var LoginCtrl, scope, $httpBackend;
-
-	beforeEach(inject(function ($controller, $rootScope, _$httpBackend_, $ionicSideMenuDelegate) {
-		scope = $rootScope.$new();
-		$httpBackend = _$httpBackend_;
-
-		LoginCtrl = $controller('LoginCtrl', {
-			$scope: scope
-		});
-	}));
-
-	it('Should work with correct logins', function(){
-		var username = 'gerson';
-		var password = '250991';
-		expect(scope.performLogin(username, password)).toBeTruthy();
-	});
-
-	it('Should not work with incorrect logins', function(){
-		var username = 'barcelona';
-		var password = '250991';
-		expect(scope.performLogin(username, password)).toBeFalsy();
-	});
-
-	it('Should not work with empty fields', function(){
-		var username = '';
-		var password = '';
-		expect(scope.performLogin(username, password)).toBeFalsy();
-	});
-});
-
-describe('ProfileCtrl', function(){
-	beforeEach(module('taxi_home_customer'));
-
-	var ProfileCtrl, scope, $httpBackend, firstName = "", lastName = "", emailAddress = "", password = "", repeatPassword = "";
-
-	beforeEach(inject(function ($controller, $rootScope, _$httpBackend_, $ionicSideMenuDelegate) {
-		scope = $rootScope.$new();
-		$httpBackend = _$httpBackend_;
-
-		ProfileCtrl = $controller('ProfileCtrl', {
-			$scope: scope
-		});
-	}));
-
-	it('Should not create account if fields are empty', function(){
-
-		expect(scope.createAccount(firstName, lastName, emailAddress, password, repeatPassword)).toBeFalsy();
-	});
-
-	it("Should not create account if passwords don't coincide", function(){
-		password = "password";
-		repeatPassword = "password2";
-		expect(scope.createAccount("Gerson", "Noboa", "gerson.noboa@ut.ee", password, repeatPassword)).toBeFalsy();
-	});
-
-	it("Should not create account if password is shorter than 6 characters", function(){
-		password = "12345";
-		repeatPassword = "12345";
-		expect(scope.createAccount("Gerson", "Noboa", "gerson.noboa@ut.ee", password, repeatPassword)).toBeFalsy();
-	});
-
-	it("Should create account if everything is correct", function(){
-		firstName = "Gerson";
-		lastName = "Noboa";
-		emailAddress = "gerson.noboa@ut.ee";
-		password = "123456";
-		repeatPassword = "123456";
-
-		expect(scope.createAccount(firstName, lastName, emailAddress, password, repeatPassword)).toBeTruthy();
-	})
-});
-
-describe('MenuCtrl', function(){
-	beforeEach(module('taxi_home_customer'));
-
-	var MenuCtrl, scope, $httpBackend;
-
-	beforeEach(inject(function ($controller, $rootScope, _$httpBackend_, $ionicSideMenuDelegate) {
-		scope = $rootScope.$new();
-		$httpBackend = _$httpBackend_;
-
-		MenuCtrl = $controller('MenuCtrl', {
-			$scope: scope
-		});
-	}));
-
-	it("Should show confirmation on user logout", function(){
-		expect(typeof(scope.logout())).toBe(typeof({}));
 	});
 });

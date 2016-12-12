@@ -18,6 +18,7 @@ module.exports = function(config) {
         'http://maps.googleapis.com/maps/api/js',
         '../www/lib/ionic/js/ionic.bundle.js',
         '../www/lib/angular-mocks/angular-mocks.js',
+        '../www/lib/angular-cookies/angular-cookies.js',
         '../www/js/*.js',
         'unit-tests/*.js'
     ],

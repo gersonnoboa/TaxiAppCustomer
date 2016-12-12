@@ -123,7 +123,9 @@ app.controller('BookingsCtrl', function($scope, $ionicModal, $ionicPopup, $http,
             }
 
             if ($scope.pickupMarker != null && $scope.destinationMarker != null){
-                $scope.drawRouteFromMarkers($scope.pickupMarker, $scope.destinationMarker);    
+                $scope.drawRouteFromMarkers($scope.pickupMarker, $scope.destinationMarker);
+
+                $scope.formData.timeOfArrival = "5 minutes";   
             }
 
             return coordinates;    
@@ -220,17 +222,22 @@ app.controller('PaymentsHistoryCtrl', function($scope, $ionicModal, $http) {
     }
 });
 
-app.controller('LoginCtrl', function($scope, $http, $ionicSideMenuDelegate, $state, $ionicPopup){
+app.controller('LoginCtrl', function($scope, $http, $ionicSideMenuDelegate, $state, $ionicPopup,$cookies){
 
     $scope.formData = {
-        username: 'gerson',
-        password: 'password'
+        username: 'meya@email.com',
+        password: '1234567'
     };
 
     $ionicSideMenuDelegate.canDragContent(false);
 
     $scope.submit = function () {
-        $scope.performLogin($scope.formData.username, $scope.formData.password);
+
+        var result = $scope.performLogin($scope.formData.username, $scope.formData.password);
+
+        if (result == true){
+            $scope.executeLogin($scope.formData.username, $scope.formData.password);
+        }
     }
 
     $scope.performLogin = function(username, password){
@@ -243,25 +250,25 @@ app.controller('LoginCtrl', function($scope, $http, $ionicSideMenuDelegate, $sta
             return false;
         }
         else{
-            if (username == 'gerson'){
-                $state.go('bookings.new');
-                return true;
-            }
-            else{
-                $scope.showAlert = function() {
-                    var alertPopup = $ionicPopup.alert({
-                        title: 'Error',
-                        template: 'Invalid credentials.'
-                    });
-
-                    alertPopup.then(function(res) {
-                        $state.go('login.start')
-                    });
-                };
-                return false;
-            }
+            return true;
 
         }
+    }
+
+    $scope.executeLogin = function(username, password){
+        $http.post('http://strs-taxi.herokuapp.com/api/users/login', {"user":{"password": password, "email": username}}).then(function (response) {
+                console.log(response);
+                $cookies.userToken = response.data.data.attributes.token;
+                console.log($cookies.userToken);
+                $state.go('bookings.new');
+            }, 
+            function (error){
+                $ionicPopup.alert({
+                    title: 'Error',
+                    template: 'An error has occurred. Please try again later. Error description: ' + error.statusText
+                });
+            }
+        );
     }
 
     $scope.$on('$ionicView.leave', function () { $ionicSideMenuDelegate.canDragContent(true) });
@@ -286,6 +293,7 @@ app.controller('ProfileCtrl', function($scope, $ionicPopup, $http, $ionicSideMen
         });
 
         alertPopup.then(function(res) {
+            console.log(res);
             $state.go('login.start')
         });
     };
@@ -295,7 +303,26 @@ app.controller('ProfileCtrl', function($scope, $ionicPopup, $http, $ionicSideMen
     $scope.submitAccountCreation = function(){
         var fd = $scope.formData;
 
-        $scope.createAccount(fd.firstName, fd.lastName, fd.email, fd.password, fd.repeatPassword);
+        var result = $scope.createAccount(fd.firstName, fd.lastName, fd.email, fd.password, fd.repeatPassword);
+
+        if (result == true){
+            $scope.executeCreateAccount(fd.firstName, fd.lastName, fd.email, fd.password, fd.repeatPassword);
+        }
+    }
+
+    $scope.executeCreateAccount = function(fn, ln, email, pw, rpw){
+        $http.post('http://strs-taxi.herokuapp.com/api/users', {"user":{"password": pw, "password_confirmation":  rpw, "email": email, "user_type": "passenger", "first_name": fn, "last_name": ln}})
+            .then(function (response) {
+
+                console.log(response);
+                $state.go('profile.card');
+
+            }, function (error){
+                $ionicPopup.alert({
+                    title: 'Error',
+                    template: 'An error has occurred. Please try again later. Error description: ' + error.statusText
+                });
+            });
     }
 
     $scope.createAccount = function(fn, ln, email, pw, rpw){
@@ -327,6 +354,7 @@ app.controller('ProfileCtrl', function($scope, $ionicPopup, $http, $ionicSideMen
             return false;   
         }
         else{
+            
             return true;
 
         }
