@@ -310,6 +310,12 @@ app.controller('PaymentsHistoryCtrl', function($scope, $ionicModal, $http, $cook
     PusherService.onMessage(function(response) {
         console.log(response.message);
         $scope.pusherMessage = response.message;
+
+        $ionicPopup.alert({
+            title: 'Message',
+            template: response.message
+        });
+
     });
 
 });
