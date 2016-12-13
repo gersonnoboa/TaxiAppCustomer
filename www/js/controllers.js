@@ -200,7 +200,7 @@ app.controller('BookingsCtrl', function($scope, $ionicModal, $ionicPopup, $http,
                 }
             };*/
 
-            $http.post('http://strs-taxi.herokuapp.com/api/bookings', json).then(function (response) {
+            $http.post(ROOT_URI+'/bookings', json).then(function (response) {
                 var d = $scope.formData;
 
                 $cookies.pickupAddress = d.pickupAddress;
