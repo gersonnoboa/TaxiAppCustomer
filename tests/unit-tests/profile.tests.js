@@ -14,19 +14,19 @@ describe('ProfileCtrl', function(){
 
 	it('Should not create account if fields are empty', function(){
 
-		expect(scope.createAccount(firstName, lastName, emailAddress, password, repeatPassword)).toBeFalsy();
+		expect(scope.validateReg(firstName, lastName, emailAddress, password, repeatPassword)).toBeFalsy();
 	});
 
 	it("Should not create account if passwords don't coincide", function(){
 		password = "password";
 		repeatPassword = "password2";
-		expect(scope.createAccount("Gerson", "Noboa", "gerson.noboa@ut.ee", password, repeatPassword)).toBeFalsy();
+		expect(scope.validateReg("Gerson", "Noboa", "gerson.noboa@ut.ee", password, repeatPassword)).toBeFalsy();
 	});
 
 	it("Should not create account if password is shorter than 6 characters", function(){
 		password = "12345";
 		repeatPassword = "12345";
-		expect(scope.createAccount("Gerson", "Noboa", "gerson.noboa@ut.ee", password, repeatPassword)).toBeFalsy();
+		expect(scope.validateReg("Gerson", "Noboa", "gerson.noboa@ut.ee", password, repeatPassword)).toBeFalsy();
 	});
 
 	xit("Should create account if everything is correct", function(){
@@ -39,6 +39,6 @@ describe('ProfileCtrl', function(){
 		//$httpBackend.expectPOST('http://strs-taxi.herokuapp.com/api/users', {latitude: 58.37, longitude: 26.71}).respond(201, {message: 'Booking is being processed'});
 		//$httpBackend.flush();
 
-		expect(scope.createAccount(firstName, lastName, emailAddress, password, repeatPassword)).toBeTruthy();
+		expect(scope.validateReg(firstName, lastName, emailAddress, password, repeatPassword)).toBeTruthy();
 	})
 });

@@ -15,21 +15,21 @@ describe('LoginCtrl', function(){
 	}));
 
 	it('Should work with correct logins', function(){
-		var username = 'gerson';
-		var password = '250991';
-		expect(scope.performLogin(username, password)).toBeTruthy();
+		scope.loginData.username = 'barcelona';
+		scope.loginData.password = '250991';
+		expect(scope.submit()).toBeTruthy();
 	});
 
 	xit('Should not work with incorrect logins', function(){
-		var username = 'barcelona';
-		var password = '250991';
-		expect(scope.performLogin(username, password)).toBeFalsy();
+		scope.username = 'barcelona';
+		scope.password = '250991';
+		expect(scope.submit(username, password)).toBeFalsy();
 	});
 
 	it('Should not work with empty fields', function(){
 		var username = '';
 		var password = '';
-		expect(scope.performLogin(username, password)).toBeFalsy();
+		expect(scope.submit(username, password)).toBeFalsy();
 	});
 
 	xit('Should login remotely', function(){
