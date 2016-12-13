@@ -1,35 +1,43 @@
 <ion-view title="Create Account">
-    <ion-nav-buttons side="left">
-        <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
-    </ion-nav-buttons>
-    <ion-content padding="true" class="has-header">
-        <form>
-            <label class="item item-input">
-                <span class="input-label">First Name</span>
-                <input type="text" placeholder="First Name" ng-model="formData.firstName">
-            </label>
-            <label class="item item-input">
-                <span class="input-label">Last Name</span>
-                <input type="text" placeholder="Last Name" ng-model="formData.lastName">
-            </label>
+  <ion-nav-buttons side="left">
+    <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
+  </ion-nav-buttons>
+  <ion-content padding="true" class="has-header">
+    <form ng-submit="submitAccountCreation()">
+      <label class="item item-input">
+        <span class="input-label">First Name</span>
+        <input type="text" name="first_name" placeholder="First Name" required ng-model="regData.firstName">
+      </label>
+      <label class="item item-input">
+        <span class="input-label">Last Name</span>
+        <input type="text" name="last_name" placeholder="Last Name" required ng-model="regData.lastName">
+      </label>
 
-            <label class="item item-input">
-                <span class="input-label">Email address</span>
-                <input type="text" placeholder="example@ut.ee" ng-model="formData.email">
-            </label>
+      <label class="item item-input">
+        <span class="input-label">Email address</span>
+        <input type="email" name="email" placeholder="example@ut.ee" required ng-model="regData.email">
+      </label>
+      <label class="item item-input">
+        <span class="input-label">Date of Birth</span>
+        <input type="date" name="dob" required ng-model="regData.dob">
+      </label>
 
-            <label class="item item-input">
-                <span class="input-label">Password</span>
-                <input type="password" placeholder="Min. 6 characters" ng-model="formData.password">
-            </label>
+      <label class="item item-input">
+        <span class="input-label">Password</span>
+        <input type="password" placeholder="Min. 6 characters" required ng-model="regData.password">
+      </label>
 
-            <label class="item item-input">
-                <span class="input-label">Repeat password</span>
-                <input type="password" placeholder="Min. 6 characters" ng-model="formData.repeatPassword">
-            </label>
+      <label class="item item-input">
+        <span class="input-label">Repeat password</span>
+        <input type="password" placeholder="Min. 6 characters" required ng-model="regData.repeatPassword">
+      </label>
+      <label class="item item-input">
+        <button class="button button-block button-positive" type="submit">Register</button>
+      </label>
+      <label class="item item-input">
+        <button class="button button-block button-energized" ng-click="goLogin()">Login</button>
+      </label>
 
-            <button class="button button-stable button-block " ng-click="submitAccountCreation()">Create account</button>
-
-        </form>
-    </ion-content>
+    </form>
+  </ion-content>
 </ion-view>

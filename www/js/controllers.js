@@ -1,7 +1,7 @@
 var app = angular.module('taxi_home_customer.controllers', []);
 
-app.controller('BookingsCtrl', function($scope, $ionicModal, $ionicPopup, $http, $state, Framework, $cookies) {
-  
+app.controller('BookingsCtrl', function($scope, $ionicModal, $ionicPopup, $http, $state, $location, Framework, $cookies) {
+
     $scope.sync_notification = '';
     $scope.pickupMarker = null;
     $scope.destinationMarker = null;
@@ -24,8 +24,8 @@ app.controller('BookingsCtrl', function($scope, $ionicModal, $ionicPopup, $http,
                 mapTypeId: google.maps.MapTypeId.ROADMAP
             };
             $scope.map = new google.maps.Map(document.getElementById('map'), mapProp);
-            $scope.pickupMarker = new google.maps.Marker({ 
-                map: $scope.map, 
+            $scope.pickupMarker = new google.maps.Marker({
+                map: $scope.map,
                 position: mapProp.center,
                 icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
             });
@@ -59,7 +59,7 @@ app.controller('BookingsCtrl', function($scope, $ionicModal, $ionicPopup, $http,
 
             return coordinates;
         }
-            
+
     };
 
     $scope.submitPickupAddress = function() {
@@ -67,12 +67,12 @@ app.controller('BookingsCtrl', function($scope, $ionicModal, $ionicPopup, $http,
 
         //var coordinates = $scope.getCoordinatesFromAddress(address);
 
-            $http.post('http://strs-taxi.herokuapp.com/api/locations', {"location":{"pickup_address": address, "dropoff_address": "bussijaam tartu"}}).then(function (response) {
+            $http.post(ROOT_URI+'/locations', {"location":{"pickup_address": address, "dropoff_address": "bussijaam tartu"}}).then(function (response) {
                 console.log(response);
                 $scope.formData.pickupAddress = response.data.data.attributes["pickup-address"];
                 $scope.formData.pickupLatitude = response.data.data.attributes["pickup-lat"];
                 $scope.formData.pickupLongitude = response.data.data.attributes["pickup-long"];
-            }, 
+            },
             function (error){
                 $ionicPopup.alert({
                     title: 'Error',
@@ -80,9 +80,9 @@ app.controller('BookingsCtrl', function($scope, $ionicModal, $ionicPopup, $http,
                 });
             });
             return true;
-        
-            
-    };  
+
+
+    };
 
     $scope.submitDestinationAddress = function() {
 
@@ -94,7 +94,7 @@ app.controller('BookingsCtrl', function($scope, $ionicModal, $ionicPopup, $http,
 
             var pickupAddress = $scope.formData.pickupAddress;
 
-            $http.post('http://strs-taxi.herokuapp.com/api/locations', {"location":{"pickup_address": pickupAddress, "dropoff_address": address}}).then(function (response) {
+            $http.post(ROOT_URI+'/locations', {"location":{"pickup_address": pickupAddress, "dropoff_address": address}}).then(function (response) {
                 console.log(response);
                 $scope.formData.destinationAddress = response.data.data.attributes["dropoff-address"];
                 $scope.formData.destinationLatitude = response.data.data.attributes["dropoff-lat"];
@@ -103,8 +103,8 @@ app.controller('BookingsCtrl', function($scope, $ionicModal, $ionicPopup, $http,
 
                 if ($scope.destinationMarker != null) $scope.destinationMarker.setMap(null);
 
-                $scope.destinationMarker = new google.maps.Marker({ 
-                    map: $scope.map, 
+                $scope.destinationMarker = new google.maps.Marker({
+                    map: $scope.map,
                     position: {lat: $scope.formData.destinationLatitude, lng: $scope.formData.destinationLongitude},
                     icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
                 });
@@ -112,16 +112,16 @@ app.controller('BookingsCtrl', function($scope, $ionicModal, $ionicPopup, $http,
                 $scope.bounds.extend($scope.destinationMarker.position);
 
                 if ($scope.map){
-                    $scope.map.fitBounds($scope.bounds);    
+                    $scope.map.fitBounds($scope.bounds);
                 }
 
                 if ($scope.pickupMarker != null && $scope.destinationMarker != null){
                     $scope.drawRouteFromMarkers($scope.pickupMarker, $scope.destinationMarker);
 
                     $scope.formData.timeOfArrival = response.data.data.attributes["time"];
-                    $scope.formData.cost = "€" + response.data.data.attributes["cost"];  
+                    $scope.formData.cost = "€" + response.data.data.attributes["cost"];
                 }
-            }, 
+            },
             function (error){
                 $ionicPopup.alert({
                     title: 'Error',
@@ -130,7 +130,7 @@ app.controller('BookingsCtrl', function($scope, $ionicModal, $ionicPopup, $http,
             });
             return true;
 
-        
+
     };
 
     $scope.drawRouteFromMarkers = function(marker1, marker2){
@@ -185,7 +185,7 @@ app.controller('BookingsCtrl', function($scope, $ionicModal, $ionicPopup, $http,
             var json = {
                 "user": {
                     "token": "iVDYzeyCBGR7Fc5gaqL13NE3"
-                }, 
+                },
                 "location": {
                     "id": "3"
                 }
@@ -194,7 +194,7 @@ app.controller('BookingsCtrl', function($scope, $ionicModal, $ionicPopup, $http,
             /*var json = {
                 "user": {
                     "token": token
-                }, 
+                },
                 "location": {
                     "id": locID
                 }
@@ -216,8 +216,8 @@ app.controller('BookingsCtrl', function($scope, $ionicModal, $ionicPopup, $http,
                 alertPopup.then(function(res) {
                     $state.go('payments-history.pending')
                 });
-                
-            }, 
+
+            },
             function (error){
                 $ionicPopup.alert({
                     title: 'Error',
@@ -230,7 +230,7 @@ app.controller('BookingsCtrl', function($scope, $ionicModal, $ionicPopup, $http,
             $ionicPopup.alert({
                 title: 'Error',
                 template: 'An error has ocurred. Please try again later.'
-            });     
+            });
         }
 
     };
@@ -242,7 +242,7 @@ app.controller('BookingsCtrl', function($scope, $ionicModal, $ionicPopup, $http,
         else{
             return true;
         }
-        
+
     };
 
 });
@@ -265,6 +265,7 @@ app.controller('PaymentsHistoryCtrl', function($scope, $ionicModal, $http, $cook
 
 app.controller('LoginCtrl', function($scope, $http, $ionicSideMenuDelegate, $state, $ionicPopup,$cookies){
 
+    $scope.loginData = {};
     if ($cookies.ccDataNumber == null || $cookies.ccDataNumber == ""){
         $cookies.ccDataNumber = "6557163848590999";
         $cookies.ccDataType = "VISA";
@@ -272,59 +273,62 @@ app.controller('LoginCtrl', function($scope, $http, $ionicSideMenuDelegate, $sta
         $cookies.ccDataMonth = "6";
         $cookies.ccDataYear = "2018";
     }
-    $scope.formData = {
+    /*$scope.formData = {
         username: 'gerson.noboa@ut.ee',
         password: '250991'
-    };
+    };*/
 
     $ionicSideMenuDelegate.canDragContent(false);
 
     $scope.submit = function () {
 
-        var result = $scope.performLogin($scope.formData.username, $scope.formData.password);
+      if (!$scope.loginData.username || !$scope.loginData.password) {
+        $ionicPopup.alert({
+          title: 'Error',
+          template: 'Kindly provide all require fields.'
+        });
 
-        if (result == true){
-            $scope.executeLogin($scope.formData.username, $scope.formData.password);
-        }
+        return false;
+      }
+      $scope.executeLogin($scope.loginData.username, $scope.loginData.password);
     }
 
-    $scope.performLogin = function(username, password){
-        if (username == "" || password == ""){
-            $ionicPopup.alert({
-                title: 'Error',
-                template: 'All fields are mandatory.'
-            });
 
-            return false;
+
+  $scope.executeLogin = function(username, password){
+    $http.post(ROOT_URI+'/users/login', {"user":{"password": password, "email": username}}).then(function (response) {
+        console.log(response);
+        $cookies.userToken = response.data.data.attributes.token;
+        $state.go('bookings.new');
+      },
+      function (err) {
+        var msg = '';
+        try {
+          msg = err.data.error;
+        } catch (e) {
+          msg = 'An error has occurred. Please try again later.';
         }
-        else{
-            return true;
+        $ionicPopup.alert({
+          title: 'Error',
+          template: msg
+        });
+      }
+    );
+  };
 
-        }
-    }
 
-    $scope.executeLogin = function(username, password){
-        $http.post('http://strs-taxi.herokuapp.com/api/users/login', {"user":{"password": password, "email": username}}).then(function (response) {
-                console.log(response);
-                $cookies.userToken = response.data.data.attributes.token;
-                console.log($cookies.userToken);
-                $state.go('bookings.new');
-            }, 
-            function (error){
-                $ionicPopup.alert({
-                    title: 'Error',
-                    template: 'An error has occurred. Please try again later. Error description: ' + error.statusText
-                });
-            }
-        );
-    }
+
+  $scope.goRegister = function () {
+    $state.go('profile.create');
+    //$location.path('/profile/create')
+  }
 
     $scope.$on('$ionicView.leave', function () { $ionicSideMenuDelegate.canDragContent(true) });
 });
 
 app.controller('ProfileCtrl', function($scope, $ionicPopup, $http, $ionicSideMenuDelegate, $state, $cookies){
 
-    $scope.formData = {
+    $scope.regData = {
         firstName: "",
         lastName: "",
         email: "",
@@ -357,26 +361,23 @@ app.controller('ProfileCtrl', function($scope, $ionicPopup, $http, $ionicSideMen
     $scope.$on('$ionicView.leave', function () { $ionicSideMenuDelegate.canDragContent(true) });
 
     $scope.submitAccountCreation = function(){
-        var fd = $scope.formData;
+        var fd = $scope.regData;
 
-        var result = $scope.createAccount(fd.firstName, fd.lastName, fd.email, fd.password, fd.repeatPassword);
-
-        if (result == true){
-            $scope.executeCreateAccount(fd.firstName, fd.lastName, fd.email, fd.password, fd.repeatPassword);
+        if ($scope.validateReg(fd.firstName, fd.lastName, fd.email, fd.password, fd.repeatPassword)) {
+            $scope.executeCreateAccount(fd.firstName, fd.lastName, fd.email, fd.password, fd.repeatPassword, fd.dob);
         }
+    };
+    $scope.goLogin = function () {
+      $state.go('login.start');
     }
 
-    $scope.executeCreateAccount = function(fn, ln, email, pw, rpw){
-        $http.post('http://strs-taxi.herokuapp.com/api/users', {"user":{"password": pw, "password_confirmation":  rpw, "email": email, "user_type": "passenger", "first_name": fn, "last_name": ln, "dob": "1991-09-25"}})
+    $scope.executeCreateAccount = function(fn, ln, email, pw, rpw, dob){
+        $http.post(ROOT_URI+'/users', {"user":{"password": pw, "password_confirmation":  rpw, "email": email, "user_type": "passenger", "first_name": fn, "last_name": ln, "dob": dob}})
             .then(function (response) {
 
                 if (response.statusText == "OK"){
                     $state.go('profile.card');
 
-                    /*$ionicPopup.alert({
-                        title: 'Success',
-                        template: response.data
-                    });*/
 
                 }
                 else{
@@ -397,10 +398,9 @@ app.controller('ProfileCtrl', function($scope, $ionicPopup, $http, $ionicSideMen
             });
     }
 
-    $scope.createAccount = function(fn, ln, email, pw, rpw){
-        
+    $scope.validateReg = function(fn, ln, email, pw, rpw){
 
-        if (fn == "" || ln == "" || email == "" || pw == "" || rpw == ""){
+        if (!fn || !ln || !email || !pw || !rpw){
 
             $ionicPopup.alert({
                 title: 'Error',
@@ -423,7 +423,7 @@ app.controller('ProfileCtrl', function($scope, $ionicPopup, $http, $ionicSideMen
                 template: 'Passwords must have 6 characters or more.'
             });
 
-            return false;   
+            return false;
         }
         else{
             return true;
@@ -461,7 +461,7 @@ app.controller('MenuCtrl', function($scope, $ionicPopup, $http, $ionicSideMenuDe
                 $state.go("login.start");
             }
         });
-        
+
         return popup;
     };
 });
