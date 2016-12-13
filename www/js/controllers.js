@@ -1,6 +1,6 @@
 var app = angular.module('taxi_home_customer.controllers', []);
 
-app.controller('BookingsCtrl', function($scope, $ionicModal, $ionicPopup, $http, $state, Framework) {
+app.controller('BookingsCtrl', function($scope, $ionicModal, $ionicPopup, $http, $state, Framework, $cookies) {
   
     $scope.sync_notification = '';
     $scope.pickupMarker = null;
@@ -11,7 +11,7 @@ app.controller('BookingsCtrl', function($scope, $ionicModal, $ionicPopup, $http,
         pickupLatitude: undefined,
         pickupLongitude: undefined,
         destinationLatitude: undefined,
-        destinationLongitude: undefined
+        destinationLongitude: undefined,
     };
 
     Framework.navigator().then(function (navigator) {
@@ -37,7 +37,7 @@ app.controller('BookingsCtrl', function($scope, $ionicModal, $ionicPopup, $http,
                 //$scope.formData.pickupLatitude = latitude;
                 //$scope.formData.pickupLongitude = longitude;
 
-                var address = $scope.getAddressFromCoordinates()
+                var address = $scope.getAddressFromCoordinates();
                 $scope.formData.pickupAddress = address;
             });
         });
@@ -65,23 +65,22 @@ app.controller('BookingsCtrl', function($scope, $ionicModal, $ionicPopup, $http,
     $scope.submitPickupAddress = function() {
         var address = $scope.formData.pickupAddress;
 
-        var coordinates = $scope.getCoordinatesFromAddress(address);
+        //var coordinates = $scope.getCoordinatesFromAddress(address);
 
-        if (coordinates == null){
-            
-            $ionicPopup.alert({
-                title: 'Error',
-                template: 'Field cannot be empty.'
+            $http.post('http://strs-taxi.herokuapp.com/api/locations', {"location":{"pickup_address": address, "dropoff_address": "bussijaam tartu"}}).then(function (response) {
+                console.log(response);
+                $scope.formData.pickupAddress = response.data.data.attributes["pickup-address"];
+                $scope.formData.pickupLatitude = response.data.data.attributes["pickup-lat"];
+                $scope.formData.pickupLongitude = response.data.data.attributes["pickup-long"];
+            }, 
+            function (error){
+                $ionicPopup.alert({
+                    title: 'Error',
+                    template: 'An error has occurred. Please try again later. Error description: ' + error.statusText
+                });
             });
-
-            return null;
-        }
-        else{
-            $scope.formData.pickupLatitude = coordinates.latitude;
-            $scope.formData.pickupLongitude = coordinates.longitude;
-
-            return coordinates;
-        }
+            return true;
+        
             
     };  
 
@@ -93,43 +92,44 @@ app.controller('BookingsCtrl', function($scope, $ionicModal, $ionicPopup, $http,
             address = "";
         }
 
-        var coordinates = $scope.getCoordinatesFromAddress(address);
+            var pickupAddress = $scope.formData.pickupAddress;
 
-        if (coordinates == null){
+            $http.post('http://strs-taxi.herokuapp.com/api/locations', {"location":{"pickup_address": pickupAddress, "dropoff_address": address}}).then(function (response) {
+                console.log(response);
+                $scope.formData.destinationAddress = response.data.data.attributes["dropoff-address"];
+                $scope.formData.destinationLatitude = response.data.data.attributes["dropoff-lat"];
+                $scope.formData.destinationLongitude = response.data.data.attributes["dropoff-long"];
+                $scope.formData.locID = response.data.data["id"];
 
-            $ionicPopup.alert({
-                title: 'Error',
-                template: 'Field cannot be empty.'
+                if ($scope.destinationMarker != null) $scope.destinationMarker.setMap(null);
+
+                $scope.destinationMarker = new google.maps.Marker({ 
+                    map: $scope.map, 
+                    position: {lat: $scope.formData.destinationLatitude, lng: $scope.formData.destinationLongitude},
+                    icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
+                });
+
+                $scope.bounds.extend($scope.destinationMarker.position);
+
+                if ($scope.map){
+                    $scope.map.fitBounds($scope.bounds);    
+                }
+
+                if ($scope.pickupMarker != null && $scope.destinationMarker != null){
+                    $scope.drawRouteFromMarkers($scope.pickupMarker, $scope.destinationMarker);
+
+                    $scope.formData.timeOfArrival = response.data.data.attributes["time"];
+                    $scope.formData.cost = "€" + response.data.data.attributes["cost"];  
+                }
+            }, 
+            function (error){
+                $ionicPopup.alert({
+                    title: 'Error',
+                    template: 'An error has occurred. Please try again later. Error description: ' + error.statusText
+                });
             });
+            return true;
 
-            return null;
-        }
-        else{
-            $scope.formData.destinationLatitude = coordinates.latitude;
-            $scope.formData.destinationLongitude = coordinates.longitude;
-
-            if ($scope.destinationMarker != null) $scope.destinationMarker.setMap(null);
-
-            $scope.destinationMarker = new google.maps.Marker({ 
-                map: $scope.map, 
-                position: {lat: coordinates.latitude, lng: coordinates.longitude},
-                icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
-            });
-
-            $scope.bounds.extend($scope.destinationMarker.position);
-
-            if ($scope.map){
-                $scope.map.fitBounds($scope.bounds);    
-            }
-
-            if ($scope.pickupMarker != null && $scope.destinationMarker != null){
-                $scope.drawRouteFromMarkers($scope.pickupMarker, $scope.destinationMarker);
-
-                $scope.formData.timeOfArrival = "5 minutes";   
-            }
-
-            return coordinates;    
-        }
         
     };
 
@@ -166,33 +166,65 @@ app.controller('BookingsCtrl', function($scope, $ionicModal, $ionicPopup, $http,
         return directionsDisplay;
     }
 
-    $scope.submit = function() {
-        /*$http.post('http://localhost:8100/#/bookings/new', {longitude: $scope.longitude, latitude: $scope.latitude})
-        .then(function (response) {
-          $scope.sync_notification = response.data.message;
-          $scope.modal.show();
-
-        });*/
-        //BookingsService.save({latitude: $scope.latitude, longitude: $scope.longitude});
-
-        $state.go('bookings.destination');
-    };
-
     $scope.submitBooking = function(){
       //$scope.modal.show();
 
         var fd = $scope.formData;
         var result = $scope.submitBookingInfo(fd.pickupLatitude, fd.pickupLongitude, fd.destinationLatitude, fd.destinationLongitude);
 
-        if (result == true) {
-            var alertPopup = $ionicPopup.alert({
-                title: 'Confirmation',
-                template: 'Your request has been sent. We will notify you when a driver is available.'
-            });
+        result = true;
 
-            alertPopup.then(function(res) {
-                $state.go('payments-history.pending')
-            });
+        if (result == true) {
+
+            var token = $cookies.userToken;
+            var locID = $scope.formData.locID;
+
+            console.log(token);
+            console.log(locID);
+
+            var json = {
+                "user": {
+                    "token": "iVDYzeyCBGR7Fc5gaqL13NE3"
+                }, 
+                "location": {
+                    "id": "3"
+                }
+            };
+
+            /*var json = {
+                "user": {
+                    "token": token
+                }, 
+                "location": {
+                    "id": locID
+                }
+            };*/
+
+            $http.post('http://strs-taxi.herokuapp.com/api/bookings', json).then(function (response) {
+                var d = $scope.formData;
+
+                $cookies.pickupAddress = d.pickupAddress;
+                $cookies.destinationAddress = d.destinationAddress;
+                $cookies.cost = d.cost;
+                $cookies.timeOfArrival = d.timeOfArrival;
+
+                var alertPopup = $ionicPopup.alert({
+                    title: 'Confirmation',
+                    template: 'Your request has been sent. We will notify you when a driver is available.'
+                });
+
+                alertPopup.then(function(res) {
+                    $state.go('payments-history.pending')
+                });
+                
+            }, 
+            function (error){
+                $ionicPopup.alert({
+                    title: 'Error',
+                    template: 'An error has occurred. Please try again later. Error description: ' + error.statusText
+                });
+            }
+        );
         }
         else{
             $ionicPopup.alert({
@@ -215,18 +247,34 @@ app.controller('BookingsCtrl', function($scope, $ionicModal, $ionicPopup, $http,
 
 });
 
-app.controller('PaymentsHistoryCtrl', function($scope, $ionicModal, $http) {
+app.controller('PaymentsHistoryCtrl', function($scope, $ionicModal, $http, $cookies) {
+
+    $scope.pendingData = {
+        pickupAddress: $cookies.pickupAddress,
+        destinationAddress: $cookies.destinationAddress,
+        cost: $cookies.cost,
+        timeOfArrival: $cookies.timeOfArrival
+    };
 
     $scope.getPayments = function(username){
         return {};
     }
+
+
 });
 
 app.controller('LoginCtrl', function($scope, $http, $ionicSideMenuDelegate, $state, $ionicPopup,$cookies){
 
+    if ($cookies.ccDataNumber == null || $cookies.ccDataNumber == ""){
+        $cookies.ccDataNumber = "6557163848590999";
+        $cookies.ccDataType = "VISA";
+        $cookies.ccDataCVV = "123";
+        $cookies.ccDataMonth = "6";
+        $cookies.ccDataYear = "2018";
+    }
     $scope.formData = {
-        username: 'meya@email.com',
-        password: '1234567'
+        username: 'gerson.noboa@ut.ee',
+        password: '250991'
     };
 
     $ionicSideMenuDelegate.canDragContent(false);
@@ -274,7 +322,7 @@ app.controller('LoginCtrl', function($scope, $http, $ionicSideMenuDelegate, $sta
     $scope.$on('$ionicView.leave', function () { $ionicSideMenuDelegate.canDragContent(true) });
 });
 
-app.controller('ProfileCtrl', function($scope, $ionicPopup, $http, $ionicSideMenuDelegate, $state){
+app.controller('ProfileCtrl', function($scope, $ionicPopup, $http, $ionicSideMenuDelegate, $state, $cookies){
 
     $scope.formData = {
         firstName: "",
@@ -282,6 +330,14 @@ app.controller('ProfileCtrl', function($scope, $ionicPopup, $http, $ionicSideMen
         email: "",
         password: "",
         repeatPassword: ""
+    }
+
+    $scope.ccData = {
+        type: "",
+        number: "",
+        cvv: "",
+        month: "",
+        year: ""
     }
 
     $ionicSideMenuDelegate.canDragContent(false);
@@ -311,11 +367,27 @@ app.controller('ProfileCtrl', function($scope, $ionicPopup, $http, $ionicSideMen
     }
 
     $scope.executeCreateAccount = function(fn, ln, email, pw, rpw){
-        $http.post('http://strs-taxi.herokuapp.com/api/users', {"user":{"password": pw, "password_confirmation":  rpw, "email": email, "user_type": "passenger", "first_name": fn, "last_name": ln}})
+        $http.post('http://strs-taxi.herokuapp.com/api/users', {"user":{"password": pw, "password_confirmation":  rpw, "email": email, "user_type": "passenger", "first_name": fn, "last_name": ln, "dob": "1991-09-25"}})
             .then(function (response) {
 
+                if (response.statusText == "OK"){
+                    $state.go('profile.card');
+
+                    /*$ionicPopup.alert({
+                        title: 'Success',
+                        template: response.data
+                    });*/
+
+                }
+                else{
+                    $ionicPopup.alert({
+                        title: 'Error',
+                        template: 'An error has occurred. Please try again later. Error description: ' + error.statusText
+                    });
+                }
+
                 console.log(response);
-                $state.go('profile.card');
+                //$state.go('profile.card');
 
             }, function (error){
                 $ionicPopup.alert({
@@ -354,11 +426,28 @@ app.controller('ProfileCtrl', function($scope, $ionicPopup, $http, $ionicSideMen
             return false;   
         }
         else{
-            
             return true;
-
         }
-        
+    }
+
+    $scope.saveCreditCardInfo = function(){
+
+        var d = $scope.ccData;
+
+        $cookies.ccDataNumber = d.number;
+        $cookies.ccDataType = d.type;
+        $cookies.ccDataCVV = d.cvv;
+        $cookies.ccDataMonth = d.month;
+        $cookies.ccDataYear = d.year;
+
+        console.log($cookies);
+
+        $ionicPopup.alert({
+            title: 'Success',
+            template: 'Account successfully created. You can now log in.'
+        });
+
+        $state.go('login.start');
     }
 });
 

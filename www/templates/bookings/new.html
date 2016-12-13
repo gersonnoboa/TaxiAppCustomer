@@ -31,7 +31,11 @@
                 <ion-item>
                     <label class="item item-input">
                         <span class="input-label">Approx. time of arrival: </span>
-                        <input type="number" placeholder="" disabled="disabled" ng-model="formData.timeOfArrival" />
+                        <input type="text" placeholder="" disabled="disabled" ng-model="formData.timeOfArrival" />
+                    </label>
+                    <label class="item item-input">
+                        <span class="input-label">Approx. cost: </span>
+                        <input type="text" placeholder="" disabled="disabled" ng-model="formData.cost" />
                     </label>
                     <button class="button button-stable button-block " ng-click="submitBooking()">Submit Booking</button>
                 </ion-item>

@@ -3,11 +3,11 @@
     <ion-list>
       <ion-item>
         <label class="item item-show">
-          <span class="input-label">Request made on 13/11/2016</span>
-          <span class="input-label">From Ülikooli 18</span>
-          <span class="input-label">To Juhan Liivi 2</span>
-          <span class="input-label">1.52 Km approximate distance</span>
-          <span class="input-label">Approximately €3.43 to pay</span>
+          <span class="input-label">Booking</span>
+          <span class="input-label">From {{formData.pickupAddress}}</span>
+          <span class="input-label">To {{formData.destinationAddress}}</span>
+          <span class="input-label">Taxi will arrive in {{formData.timeOfArrival}}</span>
+          <span class="input-label">Approximately {{formData.cost}} to pay</span>
         </label>
       </ion-item>
     </ion-list>
