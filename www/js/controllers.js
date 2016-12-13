@@ -34,8 +34,8 @@ app.controller('BookingsCtrl', function($scope, $ionicModal, $ionicPopup, $http,
             $scope.map.fitBounds($scope.bounds);
 
             $scope.$apply(function (){
-                //$scope.formData.pickupLatitude = latitude;
-                //$scope.formData.pickupLongitude = longitude;
+                $scope.formData.pickupLatitude = latitude;
+                $scope.formData.pickupLongitude = longitude;
 
                 var address = $scope.getAddressFromCoordinates();
                 $scope.formData.pickupAddress = address;
@@ -44,7 +44,7 @@ app.controller('BookingsCtrl', function($scope, $ionicModal, $ionicPopup, $http,
     });
 
     $scope.getAddressFromCoordinates = function(latitude, longitude) {
-        return 'Juhan Liivi 2, Tartu, Estonia'
+        return 'Juhan Liivi 2, 50409, Tartu, Estonia'
     };
 
     $scope.getCoordinatesFromAddress = function(address) {
@@ -72,6 +72,26 @@ app.controller('BookingsCtrl', function($scope, $ionicModal, $ionicPopup, $http,
                 $scope.formData.pickupAddress = response.data.data.attributes["pickup-address"];
                 $scope.formData.pickupLatitude = response.data.data.attributes["pickup-lat"];
                 $scope.formData.pickupLongitude = response.data.data.attributes["pickup-long"];
+
+                if ($scope.pickupMarker != null) $scope.pickupMarker.setMap(null);
+
+                $scope.pickupMarker = new google.maps.Marker({
+                    map: $scope.map,
+                    position: {lat: $scope.formData.pickupLatitude, lng: $scope.formData.pickupLongitude},
+                    icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
+                });
+
+                $scope.bounds = new google.maps.LatLngBounds();
+                $scope.bounds.extend($scope.pickupMarker.position);
+
+                if ($scope.map){
+                    $scope.map.fitBounds($scope.bounds);
+                }
+
+                if ($scope.destinationMarker != null) $scope.destinationMarker.setMap(null);
+                $scope.formData.destinationLatitude = undefined;
+                $scope.formData.destinationLongitude = undefined;
+
             },
             function (error){
                 $ionicPopup.alert({
@@ -172,7 +192,7 @@ app.controller('BookingsCtrl', function($scope, $ionicModal, $ionicPopup, $http,
         var fd = $scope.formData;
         var result = $scope.submitBookingInfo(fd.pickupLatitude, fd.pickupLongitude, fd.destinationLatitude, fd.destinationLongitude);
 
-        result = true;
+        //result = true;
 
         if (result == true) {
 
@@ -182,23 +202,23 @@ app.controller('BookingsCtrl', function($scope, $ionicModal, $ionicPopup, $http,
             console.log(token);
             console.log(locID);
 
-            var json = {
+            /*var json = {
                 "user": {
                     "token": "iVDYzeyCBGR7Fc5gaqL13NE3"
                 },
                 "location": {
                     "id": "3"
                 }
-            };
+            };*/
 
-            /*var json = {
+            var json = {
                 "user": {
                     "token": token
                 },
                 "location": {
                     "id": locID
                 }
-            };*/
+            };
 
             $http.post(ROOT_URI+'/bookings', json).then(function (response) {
                 var d = $scope.formData;
@@ -208,14 +228,39 @@ app.controller('BookingsCtrl', function($scope, $ionicModal, $ionicPopup, $http,
                 $cookies.cost = d.cost;
                 $cookies.timeOfArrival = d.timeOfArrival;
 
-                var alertPopup = $ionicPopup.alert({
-                    title: 'Confirmation',
-                    template: 'Your request has been sent. We will notify you when a driver is available.'
-                });
+                console.log($cookies.pickupAddress);
+                console.log($cookies.destinationAddress);
+                console.log($cookies.cost);
+                console.log($cookies.timeOfArrival);
 
-                alertPopup.then(function(res) {
-                    $state.go('payments-history.pending')
-                });
+                console.log(response);
+                var statusMessage = response.statusText;
+
+                if (statusMessage == "OK"){
+                    var message = response.data.message;
+
+                    var alertPopup = $ionicPopup.alert({
+                        title: 'Confirmation',
+                        template: message
+                    });
+
+                    if (message.startsWith("We do not have")){
+                        /*alertPopup.then(function(res) {
+                            $state.go('payments-history.pending')
+                        });*/
+                    }
+                    else{
+                        alertPopup.then(function(res) {
+                            $state.go('payments-history.pending')
+                        });
+                    }
+                }
+                else{
+                    $ionicPopup.alert({
+                        title: 'Error',
+                        template: 'An error has occurred. Please try again later. Error description: ' + response.statusText
+                    });
+                }
 
             },
             function (error){
@@ -247,7 +292,11 @@ app.controller('BookingsCtrl', function($scope, $ionicModal, $ionicPopup, $http,
 
 });
 
-app.controller('PaymentsHistoryCtrl', function($scope, $ionicModal, $http, $cookies) {
+app.controller('PaymentsHistoryCtrl', function($scope, $ionicModal, $http, $cookies, PusherService) {
+
+    PusherService.onMessage(function(response) {
+        console.log = response.message;
+    });
 
     $scope.pendingData = {
         pickupAddress: $cookies.pickupAddress,
@@ -260,6 +309,15 @@ app.controller('PaymentsHistoryCtrl', function($scope, $ionicModal, $http, $cook
         return {};
     }
 
+    $scope.showNewRequest = function() {
+    //$scope.new_request_msg = '';
+    var channel = Pusher.instances[0].channel('ride');
+        channel.emit('driver_'+Auth.user.id,
+        {action: 'new_request', booking: {id: 6, start_location: 'Raatuse 22', destination: 'J.Liivi 2',
+            customer_first_name: 'Victor', customer_last_name: 'Aluko', customer_phone_number: '555555'}
+        }
+    );
+  }
 
 });
 
