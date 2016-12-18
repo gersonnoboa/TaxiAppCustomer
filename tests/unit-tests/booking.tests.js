@@ -71,12 +71,6 @@ describe('BookingsCtrl', function () {
 		expect(scope.submitBookingInfo(undefined, undefined, undefined, undefined)).toBeFalsy();
 	})
 
-	it('Should not allow verification if address is empty', function(){
-		var address = "";
-
-		expect(scope.getCoordinatesFromAddress(address)).toBe(null);
-	});
-
 	it('should detect the input address correctly and convert it to coordinates', function(){
 		var address = 'Juhan Liivi 2, Tartu, Estonia';
 		

@@ -47,21 +47,6 @@ app.controller('BookingsCtrl', function($scope, $ionicModal, $ionicPopup, $http,
         return 'Juhan Liivi 2, 50409, Tartu, Estonia'
     };
 
-    $scope.getCoordinatesFromAddress = function(address) {
-
-        if (address == ""){
-            return null;
-        }
-        else{
-            var coordinates = {};
-            coordinates.latitude = 58.37;
-            coordinates.longitude = 26.71;
-
-            return coordinates;
-        }
-
-    };
-
     $scope.submitPickupAddress = function() {
         var address = $scope.formData.pickupAddress;
 
@@ -241,13 +226,13 @@ app.controller('BookingsCtrl', function($scope, $ionicModal, $ionicPopup, $http,
 
                     var alertPopup = $ionicPopup.alert({
                         title: 'Confirmation',
-                        template: message
+                        template: 'We are looking for a taxi. Please stand by.'
                     });
 
                     if (message.startsWith("We do not have")){
-                        /*alertPopup.then(function(res) {
+                        alertPopup.then(function(res) {
                             $state.go('payments-history.pending')
-                        });*/
+                        });
                     }
                     else{
                         alertPopup.then(function(res) {
@@ -275,7 +260,7 @@ app.controller('BookingsCtrl', function($scope, $ionicModal, $ionicPopup, $http,
             $ionicPopup.alert({
                 title: 'Error',
                 template: 'An error has ocurred. Please try again later.'
-            });
+            });x
         }
 
     };
@@ -304,8 +289,6 @@ app.controller('PaymentsHistoryCtrl', function($scope, $ionicModal, $http, $cook
     $scope.getPayments = function(username){
         return {};
     }
-
-    
 
     PusherService.onMessage(function(response) {
         console.log(response.message);
