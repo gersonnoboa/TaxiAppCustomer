@@ -336,7 +336,7 @@ app.controller('LoginCtrl', function($scope, $http, $ionicSideMenuDelegate, $sta
 
             return false;
         }
-        
+
         $scope.executeLogin($scope.loginData.username, $scope.loginData.password);
 
         return true;
@@ -347,7 +347,7 @@ app.controller('LoginCtrl', function($scope, $http, $ionicSideMenuDelegate, $sta
   $scope.executeLogin = function(username, password){
     $http.post(ROOT_URI+'/users/login', {"user":{"password": password, "email": username}}).then(function (response) {
         //console.log(response);
-        $cookies.userToken = response.data.data.attributes.id;
+        $cookies.userToken = response.data.data.attributes.token;
         $state.go('bookings.new');
         $scope.signedIn = true;
       },
