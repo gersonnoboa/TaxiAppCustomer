@@ -29,7 +29,6 @@
     "commit": "7488fe08b80564dd8270a0ee6971cf75e6570a1a"
   },
   "_source": "https://github.com/leggetter/pusher-test-stub.git",
-  "_target": "^2.0.1",
-  "_originalSource": "pusher-test-stub",
-  "_direct": true
+  "_target": "*",
+  "_originalSource": "pusher-test-stub"
 }

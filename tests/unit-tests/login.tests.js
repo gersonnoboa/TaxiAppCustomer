@@ -36,7 +36,7 @@ describe('LoginCtrl', function(){
 	});
 
 	it('Should login remotely', function(){
-		$httpBackend.expectPOST('https://strs-taxi2.herokuapp.com//api/users/login', {"user":{"password": "250991", "email": "gerson.noboa@ut.ee"}}).respond({"data":{"id":"4","type":"users","attributes":{"first-name":"Gerson","last-name":"Noboa","token":"g8egE9dJo8yp364v4Fc1gatH","email":"gerson.noboa@ut.ee","user-type":"passenger"}}});
+		$httpBackend.expectPOST(ROOT_URI+'/users/login', {"user":{"password": "250991", "email": "gerson.noboa@ut.ee"}}).respond({"data":{"id":"4","type":"users","attributes":{"first-name":"Gerson","last-name":"Noboa","token":"g8egE9dJo8yp364v4Fc1gatH","email":"gerson.noboa@ut.ee","user-type":"passenger"}}});
 		$httpBackend.when('GET', 'templates/profile/create.html').respond(200);
 		$httpBackend.when('GET', 'templates/menu.html').respond(200);
 		$httpBackend.when('GET', 'templates/login/start.html').respond(200);
@@ -54,7 +54,7 @@ describe('LoginCtrl', function(){
 	});
 
 	it('Should fail login', function(){
-		$httpBackend.expectPOST('https://strs-taxi2.herokuapp.com//api/users/login', {"user":{"password": "250991", "email": "gerson.noboa@ut.ee"}}).respond(500);
+		$httpBackend.expectPOST(ROOT_URI+'/users/login', {"user":{"password": "250991", "email": "gerson.noboa@ut.ee"}}).respond(500);
 		$httpBackend.when('GET', 'templates/profile/create.html').respond(200);
 		$httpBackend.when('GET', 'templates/menu.html').respond(200);
 		$httpBackend.when('GET', 'templates/login/start.html').respond(200);

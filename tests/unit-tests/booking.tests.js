@@ -4,16 +4,16 @@ describe('BookingsCtrl', function () {
 
 	var BookingsCtrl, scope, $httpBackend, Framework;
 
-	beforeEach(inject(function ($controller, $rootScope, _$httpBackend_, _Framework_/*, _BookingsService_, _PusherService_*/) {
+	beforeEach(inject(function ($controller, $rootScope, _$httpBackend_, _Framework_, _BookingsService_, _PusherService_) {
 		scope = $rootScope.$new();
 		$httpBackend = _$httpBackend_;
 		Framework = _Framework_;
 
 		BookingsCtrl = $controller('BookingsCtrl', {
 			$scope: scope,
-			Framework: Framework
-			//BookingsService: _BookingsService_,
-			//PusherService: _PusherService_
+			Framework: Framework,
+			BookingsService: _BookingsService_,
+			PusherService: _PusherService_
 		});
 	}));
 
@@ -93,7 +93,7 @@ describe('BookingsCtrl', function () {
 			}
 		};
 
-		$httpBackend.expectPOST('https://strs-taxi2.herokuapp.com//api/locations', {"location":{"pickup_address": "bussijaam tallinn", "dropoff_address": "bussijaam tartu"}}).respond(data);
+		$httpBackend.expectPOST(ROOT_URI+'/locations', {"location":{"pickup_address": "bussijaam tallinn", "dropoff_address": "bussijaam tartu"}}).respond(data);
 		$httpBackend.when('GET', 'templates/profile/create.html').respond(200);
 		$httpBackend.when('GET', 'templates/menu.html').respond(200);
 		$httpBackend.when('GET', 'templates/login/start.html').respond(200);
@@ -104,7 +104,7 @@ describe('BookingsCtrl', function () {
 	});
 
 	it('should handle error of input address', function(){
-		$httpBackend.expectPOST('https://strs-taxi2.herokuapp.com//api/locations', {"location":{"pickup_address": "bussijaam tallinn", "dropoff_address": "bussijaam tartu"}}).respond(500);
+		$httpBackend.expectPOST(ROOT_URI+'/locations', {"location":{"pickup_address": "bussijaam tallinn", "dropoff_address": "bussijaam tartu"}}).respond(500);
 		$httpBackend.when('GET', 'templates/profile/create.html').respond(200);
 		$httpBackend.when('GET', 'templates/menu.html').respond(200);
 		$httpBackend.when('GET', 'templates/login/start.html').respond(200);
@@ -116,7 +116,7 @@ describe('BookingsCtrl', function () {
 
 	it('should submit the destination address correctly', function(){
 		scope.formData.destinationAddress = 'Juhan Liivi 2, Tartu, Estonia';
-		
+
 		var data = {
 			"data": {
 				"data": {
@@ -134,7 +134,7 @@ describe('BookingsCtrl', function () {
 			}
 		};
 
-		$httpBackend.expectPOST('https://strs-taxi2.herokuapp.com//api/locations', {"location":{"pickup_address": "bussijaam tallinn", "dropoff_address": "bussijaam tartu"}}).respond(data);
+		$httpBackend.expectPOST(ROOT_URI+'/locations', {"location":{"pickup_address": "bussijaam tallinn", "dropoff_address": "bussijaam tartu"}}).respond(data);
 		$httpBackend.when('GET', 'templates/profile/create.html').respond(200);
 		$httpBackend.when('GET', 'templates/menu.html').respond(200);
 		$httpBackend.when('GET', 'templates/login/start.html').respond(200);
@@ -145,7 +145,7 @@ describe('BookingsCtrl', function () {
 	});
 
 	it('should handle error of destination address', function(){
-		$httpBackend.expectPOST('https://strs-taxi2.herokuapp.com//api/locations', {"location":{"pickup_address": "bussijaam tallinn", "dropoff_address": "bussijaam tartu"}}).respond(500);
+		$httpBackend.expectPOST(ROOT_URI+'/locations', {"location":{"pickup_address": "bussijaam tallinn", "dropoff_address": "bussijaam tartu"}}).respond(500);
 		$httpBackend.when('GET', 'templates/profile/create.html').respond(200);
 		$httpBackend.when('GET', 'templates/menu.html').respond(200);
 		$httpBackend.when('GET', 'templates/login/start.html').respond(200);
@@ -160,13 +160,13 @@ describe('BookingsCtrl', function () {
 		var dummyElement = document.createElement('div')
 		scope.map = new google.maps.Map(dummyElement);
 
-		var marker1 = new google.maps.Marker({ 
+		var marker1 = new google.maps.Marker({
             map: scope.map,
             position: {lat: 58.37, lng: 26.71},
         });
 
-		var marker2 = new google.maps.Marker({ 
-            map: scope.map, 
+		var marker2 = new google.maps.Marker({
+            map: scope.map,
             position: {lat: 58.36, lng: 26.72},
         });
 
@@ -198,7 +198,7 @@ describe('BookingsCtrl', function () {
         	}
         };
 
-		$httpBackend.expectPOST('https://strs-taxi2.herokuapp.com//api/bookings', json).respond({
+		$httpBackend.expectPOST(ROOT_URI+'/bookings', json).respond({
 			"statusText": "OK",
 			"data": {
 				"message": "OK"
@@ -228,7 +228,7 @@ describe('BookingsCtrl', function () {
         	}
         };
 
-		$httpBackend.expectPOST('https://strs-taxi2.herokuapp.com//api/bookings', json).respond(500);
+		$httpBackend.expectPOST(ROOT_URI+'/bookings', json).respond(500);
 		$httpBackend.when('GET', 'templates/profile/create.html').respond(200);
 		$httpBackend.when('GET', 'templates/menu.html').respond(200);
 		$httpBackend.when('GET', 'templates/login/start.html').respond(200);

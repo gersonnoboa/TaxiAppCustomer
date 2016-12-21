@@ -16,13 +16,13 @@ module.exports = function(config) {
     // list of files / patterns to load in the browser
     files: [
       'http://maps.googleapis.com/maps/api/js',
-        'http://js.pusher.com/3.0/pusher.min.js',
-        'www/lib/ionic/js/ionic.bundle.js',
-        'www/lib/angular-mocks/angular-mocks.js',
-        'www/lib/angular-cookies/angular-cookies.js',
-        'www/lib/pusher-test-stub/dist/pusher-test-stub.js',
-        'www/js/*.js',
-        'tests/unit-tests/*.js'
+      'www/lib/ionic/js/ionic.bundle.js',
+      'www/lib/angular-mocks/angular-mocks.js',
+      'www/lib/angular-cookies/angular-cookies.js',
+      'www/lib/pusher/dist/pusher.js',
+      'www/lib/pusher-test-stub/dist/pusher-test-stub.js',
+      'www/js/*.js',
+      'tests/unit-tests/*.js'
     ],
 
 

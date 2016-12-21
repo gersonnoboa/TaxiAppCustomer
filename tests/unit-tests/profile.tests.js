@@ -69,19 +69,19 @@ describe('ProfileCtrl', function(){
 	});
 
 	it('should execute account creation', function(){
-		$httpBackend.expectPOST('https://strs-taxi2.herokuapp.com//api/users', {"user":{"password":"250991","password_confirmation":"250991","email":"gerson.noboa@ut.ee","user_type":"passenger","first_name":"Gerson","last_name":"Noboa"}}).respond({"statusText": "OK"});
+		$httpBackend.expectPOST(ROOT_URI+'/users', {"user":{"password":"250991","password_confirmation":"250991","email":"gerson.noboa@ut.ee","user_type":"passenger","first_name":"Gerson","last_name":"Noboa"}}).respond({"statusText": "OK"});
 		scope.executeCreateAccount("Gerson", "Noboa", "gerson.noboa@ut.ee", "250991", "250991");
 		$httpBackend.flush();
 	});
 
 	it('should display error on account creation', function(){
-		$httpBackend.expectPOST('https://strs-taxi2.herokuapp.com//api/users', {"user":{"password":"250991","password_confirmation":"250991","email":"gerson.noboa@ut.ee","user_type":"passenger","first_name":"Gerson","last_name":"Noboa"}}).respond({"statusText": "Another status."});
+		$httpBackend.expectPOST(ROOT_URI+'/users', {"user":{"password":"250991","password_confirmation":"250991","email":"gerson.noboa@ut.ee","user_type":"passenger","first_name":"Gerson","last_name":"Noboa"}}).respond({"statusText": "Another status."});
 		scope.executeCreateAccount("Gerson", "Noboa", "gerson.noboa@ut.ee", "250991", "250991");
 		$httpBackend.flush();
 	});
 
 	it('should fail account creation', function(){
-		$httpBackend.expectPOST('https://strs-taxi2.herokuapp.com//api/users', {"user":{"password":"250991","password_confirmation":"250991","email":"gerson.noboa@ut.ee","user_type":"passenger","first_name":"Gerson","last_name":"Noboa"}}).respond(500);
+		$httpBackend.expectPOST(ROOT_URI+'/users', {"user":{"password":"250991","password_confirmation":"250991","email":"gerson.noboa@ut.ee","user_type":"passenger","first_name":"Gerson","last_name":"Noboa"}}).respond(500);
 		scope.executeCreateAccount("Gerson", "Noboa", "gerson.noboa@ut.ee", "250991", "250991");
 		$httpBackend.flush();
 
