@@ -7,7 +7,7 @@ app.service('PusherService', function ($rootScope, $cookies) {
     cluster: 'eu',
     encrypted: true
   });
-  var binding = "customer_" + $cookies.userToken;
+  var binding = "customer_" + $cookies.userID;
 
   var channel = pusher.subscribe(binding);
 

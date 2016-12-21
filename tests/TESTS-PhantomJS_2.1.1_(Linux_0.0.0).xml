@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<testsuite name="PhantomJS 2.1.1 (Linux 0.0.0)" package="" timestamp="2016-12-19T08:54:30" id="0" hostname="gerson" tests="20" errors="0" failures="0" time="0.166">
+  <properties>
+    <property name="browser.fullName" value="Mozilla/5.0 (Unknown; Linux x86_64) AppleWebKit/538.1 (KHTML, like Gecko) PhantomJS/2.1.1 Safari/538.1"/>
+  </properties>
+  <testcase name="BookingsCtrl should have defined formData" time="0.027" classname="PhantomJS_2_1_1_(Linux_0_0_0).BookingsCtrl"/>
+  <testcase name="BookingsCtrl should bind to the field data" time="0.008" classname="PhantomJS_2_1_1_(Linux_0_0_0).BookingsCtrl"/>
+  <testcase name="BookingsCtrl should submit a request to the backend service" time="0.006" classname="PhantomJS_2_1_1_(Linux_0_0_0).BookingsCtrl"/>
+  <testcase name="BookingsCtrl should get the correct address" time="0.008" classname="PhantomJS_2_1_1_(Linux_0_0_0).BookingsCtrl"/>
+  <testcase name="BookingsCtrl should confirm booking if all data is correct" time="0.006" classname="PhantomJS_2_1_1_(Linux_0_0_0).BookingsCtrl"/>
+  <testcase name="BookingsCtrl Should fail if a location has not been set" time="0.005" classname="PhantomJS_2_1_1_(Linux_0_0_0).BookingsCtrl"/>
+  <testcase name="BookingsCtrl should detect the input address correctly and convert it to coordinates" time="0.01" classname="PhantomJS_2_1_1_(Linux_0_0_0).BookingsCtrl"/>
+  <testcase name="BookingsCtrl should detect the destination address correctly and convert it to coordinates" time="0.007" classname="PhantomJS_2_1_1_(Linux_0_0_0).BookingsCtrl"/>
+  <testcase name="BookingsCtrl should draw coordinates" time="0.015" classname="PhantomJS_2_1_1_(Linux_0_0_0).BookingsCtrl"/>
+  <testcase name="LoginCtrl Should work with correct logins" time="0.005" classname="PhantomJS_2_1_1_(Linux_0_0_0).LoginCtrl"/>
+  <testcase name="LoginCtrl Should not work with incorrect logins" time="0" classname="PhantomJS_2_1_1_(Linux_0_0_0).LoginCtrl">
+    <skipped/>
+  </testcase>
+  <testcase name="LoginCtrl Should not work with empty fields" time="0.037" classname="PhantomJS_2_1_1_(Linux_0_0_0).LoginCtrl"/>
+  <testcase name="LoginCtrl Should login remotely" time="0" classname="PhantomJS_2_1_1_(Linux_0_0_0).LoginCtrl">
+    <skipped/>
+  </testcase>
+  <testcase name="MenuCtrl Should show confirmation on user logout" time="0.011" classname="PhantomJS_2_1_1_(Linux_0_0_0).MenuCtrl"/>
+  <testcase name="PaymentsHistoryCtrl Should return Payments History" time="0" classname="PhantomJS_2_1_1_(Linux_0_0_0).PaymentsHistoryCtrl">
+    <skipped/>
+  </testcase>
+  <testcase name="PaymentsHistoryCtrl Should receive a Pusher notification" time="0" classname="PhantomJS_2_1_1_(Linux_0_0_0).PaymentsHistoryCtrl">
+    <skipped/>
+  </testcase>
+  <testcase name="ProfileCtrl Should not create account if fields are empty" time="0.007" classname="PhantomJS_2_1_1_(Linux_0_0_0).ProfileCtrl"/>
+  <testcase name="ProfileCtrl Should not create account if passwords don't coincide" time="0.007" classname="PhantomJS_2_1_1_(Linux_0_0_0).ProfileCtrl"/>
+  <testcase name="ProfileCtrl Should not create account if password is shorter than 6 characters" time="0.007" classname="PhantomJS_2_1_1_(Linux_0_0_0).ProfileCtrl"/>
+  <testcase name="ProfileCtrl Should create account if everything is correct" time="0" classname="PhantomJS_2_1_1_(Linux_0_0_0).ProfileCtrl">
+    <skipped/>
+  </testcase>
+  <system-out>
+    <![CDATA[
+]]>
+  </system-out>
+  <system-err/>
+</testsuite>

@@ -2,14 +2,16 @@ describe('BookingsCtrl', function () {
 
 	beforeEach(module('taxi_home_customer'));
 
-	var BookingsCtrl, scope, $httpBackend;
+	var BookingsCtrl, scope, $httpBackend, Framework;
 
-	beforeEach(inject(function ($controller, $rootScope, _$httpBackend_/*, _BookingsService_, _PusherService_*/) {
+	beforeEach(inject(function ($controller, $rootScope, _$httpBackend_, _Framework_/*, _BookingsService_, _PusherService_*/) {
 		scope = $rootScope.$new();
 		$httpBackend = _$httpBackend_;
+		Framework = _Framework_;
 
 		BookingsCtrl = $controller('BookingsCtrl', {
-			$scope: scope
+			$scope: scope,
+			Framework: Framework
 			//BookingsService: _BookingsService_,
 			//PusherService: _PusherService_
 		});
@@ -73,25 +75,87 @@ describe('BookingsCtrl', function () {
 
 	it('should detect the input address correctly and convert it to coordinates', function(){
 		var address = 'Juhan Liivi 2, Tartu, Estonia';
-		
-		var coordinates = {};
-		coordinates.latitude = 58.37;
-		coordinates.longitude = 26.71;
 
-		expect(scope.submitPickupAddress(address)).toBeTruthy();
+		var data = {
+			"data": {
+				"data": {
+					"attributes": {
+						"pickup-address": "Juhan Liivi 2, 50409, Tartu, Estonia",
+						"pickup-lat": 58.3747273,
+						"pickup-long": 26.7407149,
+						"dropoff-address": "Raatuse 22, 50009, Tartu, Estonia",
+						"dropoff-lat": 58.3747273,
+						"dropoff-long": 26.747149,
+						"time": 5,
+						"cost": 3.30
+					}
+				}
+			}
+		};
+
+		$httpBackend.expectPOST('https://strs-taxi2.herokuapp.com//api/locations', {"location":{"pickup_address": "bussijaam tallinn", "dropoff_address": "bussijaam tartu"}}).respond(data);
+		$httpBackend.when('GET', 'templates/profile/create.html').respond(200);
+		$httpBackend.when('GET', 'templates/menu.html').respond(200);
+		$httpBackend.when('GET', 'templates/login/start.html').respond(200);
+
+		scope.submitPickupAddress(address);
+
+		$httpBackend.flush();
 	});
 
-	it('should detect the destination address correctly and convert it to coordinates', function(){
+	it('should handle error of input address', function(){
+		$httpBackend.expectPOST('https://strs-taxi2.herokuapp.com//api/locations', {"location":{"pickup_address": "bussijaam tallinn", "dropoff_address": "bussijaam tartu"}}).respond(500);
+		$httpBackend.when('GET', 'templates/profile/create.html').respond(200);
+		$httpBackend.when('GET', 'templates/menu.html').respond(200);
+		$httpBackend.when('GET', 'templates/login/start.html').respond(200);
+
+		scope.submitPickupAddress("bussijaam tartu");
+
+		$httpBackend.flush();
+	});
+
+	it('should submit the destination address correctly', function(){
 		scope.formData.destinationAddress = 'Juhan Liivi 2, Tartu, Estonia';
 		
-		var coordinates = {};
-		coordinates.latitude = 58.37;
-		coordinates.longitude = 26.71;
+		var data = {
+			"data": {
+				"data": {
+					"attributes": {
+						"pickup-address": "Juhan Liivi 2, 50409, Tartu, Estonia",
+						"pickup-lat": 58.3747273,
+						"pickup-long": 26.7407149,
+						"dropoff-address": "Raatuse 22, 50009, Tartu, Estonia",
+						"dropoff-lat": 58.3747273,
+						"dropoff-long": 26.747149,
+						"time": 5,
+						"cost": 3.30
+					}
+				}
+			}
+		};
 
-		expect(scope.submitDestinationAddress(scope.formData.destinationAddress)).toBeTruthy();
+		$httpBackend.expectPOST('https://strs-taxi2.herokuapp.com//api/locations', {"location":{"pickup_address": "bussijaam tallinn", "dropoff_address": "bussijaam tartu"}}).respond(data);
+		$httpBackend.when('GET', 'templates/profile/create.html').respond(200);
+		$httpBackend.when('GET', 'templates/menu.html').respond(200);
+		$httpBackend.when('GET', 'templates/login/start.html').respond(200);
+
+		scope.submitDestinationAddress("bussijaam tartu");
+
+		$httpBackend.flush();
 	});
 
-	xit('should draw coordinates', function(){
+	it('should handle error of destination address', function(){
+		$httpBackend.expectPOST('https://strs-taxi2.herokuapp.com//api/locations', {"location":{"pickup_address": "bussijaam tallinn", "dropoff_address": "bussijaam tartu"}}).respond(500);
+		$httpBackend.when('GET', 'templates/profile/create.html').respond(200);
+		$httpBackend.when('GET', 'templates/menu.html').respond(200);
+		$httpBackend.when('GET', 'templates/login/start.html').respond(200);
+
+		scope.submitDestinationAddress("bussijaam tartu");
+
+		$httpBackend.flush();
+	});
+
+	it('should draw coordinates', function(){
 
 		var dummyElement = document.createElement('div')
 		scope.map = new google.maps.Map(dummyElement);
@@ -108,6 +172,78 @@ describe('BookingsCtrl', function () {
 
 		var renderer = scope.drawRouteFromMarkers(marker1, marker2);
 
-		expect(typeof(renderer)).toBe(google.maps.DirectionsRenderer);
+		expect(typeof(renderer)).toBe(typeof(new google.maps.DirectionsRenderer()));
+	});
+
+	it('should verify correctly the booking info', function(){
+		expect(scope.submitBookingInfo(1.0, 1.0, 1.0, 1.0)).toBeTruthy();
+	});
+
+	it('should return error on incorrect coordinates', function(){
+		expect(scope.submitBookingInfo(undefined, undefined, undefined, undefined)).toBeFalsy();
+	});
+
+	it('should submit booking', function(){
+		scope.formData.pickupLatitude = 50.0;
+		scope.formData.pickupLongitude = 20.0;
+		scope.formData.destinationLatitude = 50.0;
+		scope.formData.destinationLongitude = 20.0;
+
+		var json = {
+            "user": {
+            	"token": "iVDYzeyCBGR7Fc5gaqL13NE3"
+			},
+			"location": {
+            	"id": "3"
+        	}
+        };
+
+		$httpBackend.expectPOST('https://strs-taxi2.herokuapp.com//api/bookings', json).respond({
+			"statusText": "OK",
+			"data": {
+				"message": "OK"
+			}
+		});
+		$httpBackend.when('GET', 'templates/profile/create.html').respond(200);
+		$httpBackend.when('GET', 'templates/menu.html').respond(200);
+		$httpBackend.when('GET', 'templates/login/start.html').respond(200);
+
+		scope.submitDestinationAddress("tallinn bussijaam");
+
+		$httpBackend.flush();
+	});
+
+	it('should submit booking', function(){
+		scope.formData.pickupLatitude = 50.0;
+		scope.formData.pickupLongitude = 20.0;
+		scope.formData.destinationLatitude = 50.0;
+		scope.formData.destinationLongitude = 20.0;
+
+		var json = {
+            "user": {
+            	"token": "iVDYzeyCBGR7Fc5gaqL13NE3"
+			},
+			"location": {
+            	"id": "3"
+        	}
+        };
+
+		$httpBackend.expectPOST('https://strs-taxi2.herokuapp.com//api/bookings', json).respond(500);
+		$httpBackend.when('GET', 'templates/profile/create.html').respond(200);
+		$httpBackend.when('GET', 'templates/menu.html').respond(200);
+		$httpBackend.when('GET', 'templates/login/start.html').respond(200);
+
+		scope.submitDestinationAddress("tallinn bussijaam");
+
+		$httpBackend.flush();
+	});
+
+	it('should not submit booking', function(){
+		scope.formData.pickupLatitude = undefined;
+		scope.formData.pickupLongitude = undefined;
+		scope.formData.destinationLatitude = undefined;
+		scope.formData.destinationLongitude = undefined;
+
+		expect(scope.submitBooking()).toBeFalsy();
 	});
 });

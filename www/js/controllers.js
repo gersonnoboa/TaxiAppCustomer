@@ -11,10 +11,14 @@ app.controller('BookingsCtrl', function($scope, $ionicModal, $ionicPopup, $http,
         pickupLatitude: undefined,
         pickupLongitude: undefined,
         destinationLatitude: undefined,
-        destinationLongitude: undefined,
+        destinationLongitude: undefined
     };
 
     Framework.navigator().then(function (navigator) {
+        $scope.startMethod(navigator);
+    });
+
+    $scope.startMethod = function(navigator){
         navigator.geolocation.getCurrentPosition(function(position) {
             var latitude = position.coords.latitude;
             var longitude = position.coords.longitude;
@@ -41,7 +45,7 @@ app.controller('BookingsCtrl', function($scope, $ionicModal, $ionicPopup, $http,
                 $scope.formData.pickupAddress = address;
             });
         });
-    });
+    };
 
     $scope.getAddressFromCoordinates = function(latitude, longitude) {
         return 'Juhan Liivi 2, 50409, Tartu, Estonia'
@@ -260,7 +264,9 @@ app.controller('BookingsCtrl', function($scope, $ionicModal, $ionicPopup, $http,
             $ionicPopup.alert({
                 title: 'Error',
                 template: 'An error has ocurred. Please try again later.'
-            });x
+            });
+
+            return false;
         }
 
     };
@@ -340,9 +346,10 @@ app.controller('LoginCtrl', function($scope, $http, $ionicSideMenuDelegate, $sta
 
   $scope.executeLogin = function(username, password){
     $http.post(ROOT_URI+'/users/login', {"user":{"password": password, "email": username}}).then(function (response) {
-        console.log(response);
-        $cookies.userToken = response.data.data.attributes.token;
+        //console.log(response);
+        $cookies.userToken = response.data.data.attributes.id;
         $state.go('bookings.new');
+        $scope.signedIn = true;
       },
       function (err) {
         var msg = '';
@@ -357,9 +364,8 @@ app.controller('LoginCtrl', function($scope, $http, $ionicSideMenuDelegate, $sta
         });
       }
     );
+
   };
-
-
 
   $scope.goRegister = function () {
     $state.go('profile.create');
@@ -389,18 +395,6 @@ app.controller('ProfileCtrl', function($scope, $ionicPopup, $http, $ionicSideMen
 
     $ionicSideMenuDelegate.canDragContent(false);
 
-    $scope.showAlert = function() {
-        var alertPopup = $ionicPopup.alert({
-            title: 'Confirmation',
-            template: 'Profile created successfully.'
-        });
-
-        alertPopup.then(function(res) {
-            console.log(res);
-            $state.go('login.start')
-        });
-    };
-
     $scope.$on('$ionicView.leave', function () { $ionicSideMenuDelegate.canDragContent(true) });
 
     $scope.submitAccountCreation = function(){
@@ -409,7 +403,10 @@ app.controller('ProfileCtrl', function($scope, $ionicPopup, $http, $ionicSideMen
         if ($scope.validateReg(fd.firstName, fd.lastName, fd.email, fd.password, fd.repeatPassword)) {
             $scope.executeCreateAccount(fd.firstName, fd.lastName, fd.email, fd.password, fd.repeatPassword, fd.dob);
         }
+
+        return true;
     };
+
     $scope.goLogin = function () {
       $state.go('login.start');
     }
@@ -426,7 +423,7 @@ app.controller('ProfileCtrl', function($scope, $ionicPopup, $http, $ionicSideMen
                 else{
                     $ionicPopup.alert({
                         title: 'Error',
-                        template: 'An error has occurred. Please try again later. Error description: ' + error.statusText
+                        template: 'An error has occurred. Please try again later. Error description: ' + response.statusText
                     });
                 }
 
