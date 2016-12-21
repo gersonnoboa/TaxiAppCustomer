@@ -2,6 +2,7 @@
   "name": "taxi_home_customer",
   "version": "1.1.1",
   "description": "taxi_home_customer: An Ionic project",
+  "main": "server.js",
   "dependencies": {
     "gulp": "^3.5.6",
     "gulp-sass": "^2.0.4",
