@@ -1,6 +1,6 @@
 var app = angular.module('taxi_home_customer.controllers', []);
 
-app.controller('BookingsCtrl', function($scope, $ionicModal, $ionicPopup, $http, $state, $location, Framework, $cookies) {
+app.controller('BookingsCtrl', function($scope, $ionicModal, $ionicPopup, $http, $state, $location, Framework, $cookies, PusherService) {
 
     $scope.sync_notification = '';
     $scope.pickupMarker = null;
@@ -226,7 +226,19 @@ app.controller('BookingsCtrl', function($scope, $ionicModal, $ionicPopup, $http,
                 var statusMessage = response.statusText;
 
                 if (statusMessage == "OK"){
-                    var message = response.data.message;
+
+                  PusherService.onMessage(function(response) {
+                    console.log(response.message);
+                    $scope.pusherMessage = response.message;
+
+                    $ionicPopup.alert({
+                      title: 'Message',
+                      template: response.message
+                    });
+
+                  });
+
+                  var message = response.data.message;
 
                     var alertPopup = $ionicPopup.alert({
                         title: 'Confirmation',
@@ -263,7 +275,7 @@ app.controller('BookingsCtrl', function($scope, $ionicModal, $ionicPopup, $http,
         else{
             $ionicPopup.alert({
                 title: 'Error',
-                template: 'An error has ocurred. Please try again later.'
+                template: 'An error has occurred. Please try again later.'
             });
 
             return false;
@@ -283,7 +295,7 @@ app.controller('BookingsCtrl', function($scope, $ionicModal, $ionicPopup, $http,
 
 });
 
-app.controller('PaymentsHistoryCtrl', function($scope, $ionicModal, $http, $cookies, PusherService) {
+app.controller('PaymentsHistoryCtrl', function($scope, $ionicModal, $http, $cookies) {
 
     $scope.pendingData = {
         pickupAddress: $cookies.pickupAddress,
@@ -295,17 +307,6 @@ app.controller('PaymentsHistoryCtrl', function($scope, $ionicModal, $http, $cook
     $scope.getPayments = function(username){
         return {};
     }
-
-    PusherService.onMessage(function(response) {
-        console.log(response.message);
-        $scope.pusherMessage = response.message;
-
-        $ionicPopup.alert({
-            title: 'Message',
-            template: response.message
-        });
-
-    });
 
 });
 
@@ -348,6 +349,7 @@ app.controller('LoginCtrl', function($scope, $http, $ionicSideMenuDelegate, $sta
     $http.post(ROOT_URI+'/users/login', {"user":{"password": password, "email": username}}).then(function (response) {
         //console.log(response);
         $cookies.userToken = response.data.data.attributes.token;
+        $cookies.user_Id = response.data.data.id;
         $state.go('bookings.new');
         $scope.signedIn = true;
       },

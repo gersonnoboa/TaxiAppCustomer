@@ -7,15 +7,12 @@ app.service('PusherService', function ($rootScope, $cookies) {
     cluster: 'eu',
     encrypted: true
   });
-  var binding = "customer_" + $cookies.userID;
-
-  var channel = pusher.subscribe(binding);
-
-  
-
   return {
     onMessage: function (callback) {
-      channel.bind('ride', function (data) {
+      var binding = "customer_" + $cookies.user_Id;
+
+      var channel = pusher.subscribe(binding);
+      channel.bind('pickup', function (data) {
         $rootScope.$apply(function () {
           callback(data);
 
